@@ -1,51 +1,53 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
+using System.Collections;
 
-public class Camera2DFollow : MonoBehaviour
-{
-    public float damping = 1;
-    public float lookAheadFactor = 3;
-    public float lookAheadReturnSpeed = 0.5f;
-    public float lookAheadMoveThreshold = 0.1f;
+public class Camera2DFollow : MonoBehaviour {
 
-    private Transform target;
-    private float m_OffsetZ;
-    private Vector3 m_LastTargetPosition;
-    private Vector3 m_CurrentVelocity;
-    private Vector3 m_LookAheadPos;
+    // the target the camera should follow (usually the player)
+    public Transform target;
 
-    // Use this for initialization
-    private void Start()
-    {
-		target = GameObject.FindGameObjectWithTag ("Player").transform;
-        m_LastTargetPosition = target.position;
-        m_OffsetZ = (transform.position - target.position).z;
-        transform.parent = null;
+    // the camera distance (z position)
+    public float distance = -10f;
+
+    // the height the camera should be above the target (AKA player)
+    public float height = 0f;
+
+    // damping is the amount of time the camera should take to go to the target
+    public float damping = 5.0f;
+
+    // map maximum X and Y coordinates. (the final boundaries of your map/level)
+    public float mapX = 100.0f;
+    public float mapY = 100.0f;
+
+    // just private var for the map boundaries
+    private float minX = 0f;
+    private float maxX = 0f;
+    private float minY = 0f;
+    private float maxY = 0f;
+
+    void Start () {
+        // the map MinX and MinY are the position that the camera STARTS
+        minX = transform.position.x;
+        minY = transform.position.y;
+        // the desired max boundaries
+        maxX = mapX;
+        maxY = mapY;
     }
 
+    void Update () {
 
-    // Update is called once per frame
-    private void Update()
-    {
-        // only update lookahead pos if accelerating or changed direction
-        float xMoveDelta = (target.position - m_LastTargetPosition).x;
+        // get the position of the target (AKA player)
+        Vector3 wantedPosition = target.TransformPoint(0, 0, distance);
 
-        bool updateLookAheadTarget = Mathf.Abs(xMoveDelta) > lookAheadMoveThreshold;
+        // check if it's inside the boundaries on the X position
+        wantedPosition.x = (wantedPosition.x < minX) ? minX : wantedPosition.x;
+        wantedPosition.x = (wantedPosition.x > maxX) ? maxX : wantedPosition.x;
 
-        if (updateLookAheadTarget)
-        {
-            m_LookAheadPos = lookAheadFactor*Vector3.right*Mathf.Sign(xMoveDelta);
-        }
-        else
-        {
-            m_LookAheadPos = Vector3.MoveTowards(m_LookAheadPos, Vector3.zero, Time.deltaTime*lookAheadReturnSpeed);
-        }
+        // check if it's inside the boundaries on the Y position
+        wantedPosition.y = (wantedPosition.y < minY) ? minY : wantedPosition.y;
+        wantedPosition.y = (wantedPosition.y > maxY) ? maxY : wantedPosition.y;
 
-        Vector3 aheadTargetPos = target.position + m_LookAheadPos + Vector3.forward*m_OffsetZ;
-        Vector3 newPos = Vector3.SmoothDamp(transform.position, aheadTargetPos, ref m_CurrentVelocity, damping);
-
-        transform.position = newPos;
-
-        m_LastTargetPosition = target.position;
+        // set the camera to go to the wanted position in a certain amount of time
+        transform.position = Vector3.Lerp (transform.position, wantedPosition, Mathf.Clamp(Time.deltaTime * damping, 0, 1));
     }
 }
