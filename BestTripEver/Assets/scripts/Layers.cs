@@ -5,15 +5,6 @@ using UnityEngine;
 // ----------------------------------------------------------------
 public class Layers : MonoBehaviour
 {
-    public enum ELayer
-    {
-        Base,
-        Red,
-        Green,
-        Blue,
-        Yellow,
-    };
-
     public GameObject Base;
     public GameObject Red;
     public GameObject Green;

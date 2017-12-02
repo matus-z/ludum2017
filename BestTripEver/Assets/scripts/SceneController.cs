@@ -5,23 +5,17 @@ using UnityEngine;
 // ----------------------------------------------------------------
 public class SceneController : MonoBehaviour
 {
-    private List<Layers.ELayer> UnlockedLayers;
+    private List<ELayer> UnlockedLayers;
 
     // ----------------------------------------------------------------
 	private void Start ()
     {
-        UnlockedLayers = new List<Layers.ELayer>();
-        UnlockedLayers.Add(Layers.ELayer.Base);
+        UnlockedLayers = new List<ELayer>();
+        UnlockedLayers.Add(ELayer.Base);
 	}
 
     // ----------------------------------------------------------------
-    private void Update()
-    {
-        ActivateLayer(Layers.ELayer.Red);
-    }
-
-    // ----------------------------------------------------------------
-    public void ActivateLayer(Layers.ELayer layer)
+    public void ActivateLayer(ELayer layer)
     {
         UnlockedLayers.Add(layer);
         foreach (Transform child in transform)

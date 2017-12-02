@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// ----------------------------------------------------------------
 public class PlayerController : MonoBehaviour
 {
 	public float MaxSpeed = 10.0f;
-    public float PickRadius = 3.0f;
-    public float PickAngle = 45.0f;
+    public float InteractRadius = 3.0f;
+    public float InteractAngle = 45.0f;
 
     private Rigidbody2D rb;
     private Vector2 Up;
@@ -14,6 +15,7 @@ public class PlayerController : MonoBehaviour
 
     private GameObject PickedObj;
 
+    // ----------------------------------------------------------------
     private void Start ()
     {
 		rb = GetComponent<Rigidbody2D>();
@@ -23,6 +25,7 @@ public class PlayerController : MonoBehaviour
         LastPos = transform.position;
     }
 
+    // ----------------------------------------------------------------
     private void Update ()
     {
         Vector2 movementDir = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
@@ -38,7 +41,7 @@ public class PlayerController : MonoBehaviour
             if (PickedObj)
                 DropObject();
             else
-                PickObject();
+                InteractWithObjects();
         }
 
         Vector2 deltaPos = transform.position;
@@ -53,6 +56,14 @@ public class PlayerController : MonoBehaviour
         LastPos = transform.position;
     }
 
+    // ----------------------------------------------------------------
+    public void PickObject(GameObject go)
+    {
+        if (go)
+            PickedObj = go;
+    }
+
+    // ----------------------------------------------------------------
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
@@ -63,49 +74,71 @@ public class PlayerController : MonoBehaviour
             Gizmos.DrawLine(transform.position, PickedObj.gameObject.transform.position);
     }
 
-    private void PickObject()
+    // ----------------------------------------------------------------
+    private void InteractWithObjects()
     {
         if (PickedObj)
             return;
 
-        foreach (Collider2D col in Physics2D.OverlapCircleAll(transform.position, PickRadius))
+        GameObject objFound = FindNearestInteractable();
+        if (objFound == null)
+            return;
+
+        IInteractable interactableComponent = objFound.GetComponent(typeof(IInteractable)) as IInteractable;
+        if (interactableComponent == null)
+            return;
+
+        interactableComponent.InteractWithPlayer(this);
+    }
+    
+    // ----------------------------------------------------------------
+    private void DropObject()
+    {
+        PickedObj = null;
+    }
+
+    // ----------------------------------------------------------------
+    private GameObject FindNearestInteractable()
+    {
+        GameObject res = null;
+
+        foreach (Collider2D col in Physics2D.OverlapCircleAll(transform.position, InteractRadius))
         {
             if (col.attachedRigidbody == null)
                 continue;
 
-            // Only pick a pickable
-            if (col.gameObject.GetComponent<Pickable>() == null)
+            // Only interact with an interactable
+            IInteractable interactableComponent = col.gameObject.GetComponent(typeof(IInteractable)) as IInteractable;
+            if (interactableComponent == null)
                 continue;
 
-            // Do not pick yourself
-            if (col.attachedRigidbody.gameObject == gameObject)
+            // Do not interact with yourself
+            if (col.gameObject == gameObject)
                 continue;
 
             Vector2 vecToObj = col.transform.position - transform.position;
 
-            // Only pick withing angle range
+            // Only interact withing angle range
             float angle = Vector2.Angle(col.attachedRigidbody.GetRelativeVector(vecToObj), Up);
-            if (angle > PickAngle)
+            if (angle > InteractAngle)
                 continue;
 
-            if (PickedObj == null)
+            // If no object fount yet take this one
+            if (res == null)
             {
-                PickedObj = col.gameObject;
+                res = col.gameObject;
                 continue;
             }
 
-            // Pick the nearest one
-            Vector2 vecToPicked = transform.position - PickedObj.transform.position;
+            // Else take one if closer
+            Vector2 vecToPicked = transform.position - res.transform.position;
             float distance = vecToObj.magnitude;
             float distanceToPicked = vecToPicked.magnitude;
 
             if (distance < distanceToPicked)
-                PickedObj = col.gameObject;
+                res = col.gameObject;
         }
-    }
 
-    private void DropObject()
-    {
-        PickedObj = null;
+        return res;
     }
 }

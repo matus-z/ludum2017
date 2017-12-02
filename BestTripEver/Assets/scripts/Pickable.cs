@@ -5,6 +5,11 @@ using UnityEngine;
 // ----------------------------------------------------------------
 [RequireComponent(typeof(BoxCollider2D))]
 [RequireComponent(typeof(Rigidbody2D))]
-public class Pickable : MonoBehaviour
+public class Pickable : MonoBehaviour, IInteractable
 {
+    public void InteractWithPlayer(PlayerController player)
+    {
+        // Pickable interaction is PickObject
+        player.PickObject(gameObject);
+    }
 }
