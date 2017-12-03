@@ -30,8 +30,8 @@ public class Puzzle : MonoBehaviour
     void Start()
     {
         EndingPoints = new List<EndingPoint>();
-        EndingPoints.Add(new EndingPoint(0, 4));
-        EndingPoints.Add(new EndingPoint(1, 0));
+        EndingPoints.Add(new EndingPoint(0, 4, 0));
+        EndingPoints.Add(new EndingPoint(1, 0, 0));
 
         GeneratePuzzle(PuzzleMapExtended());
     }
