@@ -12,28 +12,26 @@ public class Puzzle : MonoBehaviour
     public float offsetX = 0.0f;
     public float offsetY = 0.0f;
 
-    public EDirection InDir = EDirection.Down;
-    public List<EndingPoint> EndingPoints;
+    //public EDirection InPos = EDirection.Down;
+    //public List<EndingPoint> EndingPoints;
 
-    List<List<int>> puzzleMap = new List<List<int>> {
-        new List<int>() {1, 0, 0, 0, 0, 1},
-        new List<int>() {1, 0, 2, 2, 1, 1},
-        new List<int>() {2, 0, 2, 2, 2, 1},
-        new List<int>() {1, 0, 0, 1, 2, 1},
-        new List<int>() {1, 1, 2, 1, 1, 1},
-        new List<int>() {1, 1, 2, 0, 0, 0},
-    };
+    //List<List<int>> puzzleMap = new List<List<int>> {
+    //    new List<int>() {1, 0, 0, 0, 0, 1},
+    //    new List<int>() {1, 0, 2, 2, 1, 1},
+    //    new List<int>() {2, 0, 2, 2, 2, 1},
+    //    new List<int>() {1, 0, 0, 1, 2, 1},
+    //    new List<int>() {1, 1, 2, 1, 1, 1},
+    //    new List<int>() {1, 1, 2, 0, 0, 0},
+    //};
 
     private float TileSize = 4.21f;
 
     // ----------------------------------------------------------------
-    void Start()
+    private void Start()
     {
         EndingPoints = new List<EndingPoint>();
         EndingPoints.Add(new EndingPoint(0, 4));
         EndingPoints.Add(new EndingPoint(1, 0));
-
-        GeneratePuzzle(PuzzleMapExtended());
     }
 
     // ----------------------------------------------------------------
@@ -48,70 +46,92 @@ public class Puzzle : MonoBehaviour
         if (puzzleMap.Count <= 0)
             return 0;
 
-        int maxY = puzzleMap.Max(obj => obj.Count);
-        return maxY;
+        return puzzleMap.Max(obj => obj.Count);
+    }
+
+    private int DimColsExtended() { return DimCols() + 2; }
+    private int DimRowsExtended() { return DimRows() + 2; }
+
+    // ----------------------------------------------------------------
+    private int PlayerStartingPosRand()
+    {
+        return Random.Range(0, InPos == EDirection.Up || InPos == EDirection.Down ? DimRows() : DimCols());
     }
 
     // ----------------------------------------------------------------
-    private List<List<int>> PuzzleMapExtended()
+    private List<List<int>> PuzzleMapExtended(MapInfo mi)
     {
         List<List<int>> res = new List<List<int>>();
 
-        int dimCols = DimCols();
-        int dimRows = DimRows();
+        int dC = DimCols();
+        int dR = DimRows();
+        int dCE = DimColsExtended();
+        int dRE = DimRowsExtended();
 
-        for (int col = 0; col < dimCols + 2; col++)
+        // Fill extended map with empty tiles
+        for (int col = 0; col < dCE; col++)
         {
             res.Add(new List<int>());
-            for (int row = 0; row < dimRows + 2; row++)
+            for (int row = 0; row < dRE; row++)
             {
-                res[res.Count - 1].Add(-10);
+                res[res.Count - 1].Add((int)ETile.Void);
             }
         }
 
-        for (int col = 0; col < dimCols; col++)
+        // Add defined unextended tiles
+        for (int col = 0; col < dC; col++)
         {
-            for (int row = 0; row < dimRows; row++)
+            for (int row = 0; row < dR; row++)
             {
-                res[row + 1][col + 1] = puzzleMap[row][col];
+                res[row + 1][col + 1] = mi.puzzleMap[row][col];
             }
         }
 
-        switch (InDir)
+        // Add tiles for in direction
+        switch (mi.InPos)
         {
             case EDirection.Up:
-                for (int i = 0; i < dimCols; i++)
-                    res[0][i + 1] = -1;
+                for (int i = 0; i < dC; i++)
+                    res[0][i + 1] = (int)ETile.In;
                 break;
             case EDirection.Right:
-                for (int i = 0; i < dimRows; i++)
-                    res[i + 1][dimCols + 1] = -1;
+                for (int i = 0; i < dR; i++)
+                    res[i + 1][dC + 1] = (int)ETile.In;
                 break;
             case EDirection.Down:
-                for (int i = 0; i < dimCols; i++)
-                    res[dimRows + 1][i + 1] = -1;
+                for (int i = 0; i < dC; i++)
+                    res[dR + 1][i + 1] = (int)ETile.In;
                 break;
             case EDirection.Left:
-                for (int i = 0; i < dimRows; i++)
-                    res[i + 1][0] = -1;
+                for (int i = 0; i < dR; i++)
+                    res[i + 1][0] = (int)ETile.In;
                 break;
         }
 
-        foreach (EndingPoint ep in EndingPoints)
-            res[ep.X][ep.Y] = -2;
+        // Add tiles for in out directions
+        foreach (EndingPoint ep in mi.EndingPoints)
+            res[ep.X][ep.Y] = (int)ETile.Out;
 
         return res;
     }
 
     // ----------------------------------------------------------------
-    void GeneratePuzzle(List<List<int>> map)
+    public void Generate(MapInf mi)
     {
-        int dimCols = DimCols();
-        int dimRows = DimRows();
+        List<List<int>> puzzleMap = PuzzleMapExtended(mi);
 
-        for (int col = 0; col < dimCols + 2; col++)
+        GenerateExended(puzzleMap);
+    }
+
+    // ----------------------------------------------------------------
+    private void GenerateExended(List<List<int>> map)
+    {
+        int dCE = DimColsExtended();
+        int dRE = DimRowsExtended();
+
+        for (int col = 0; col < dCE; col++)
         {
-            for (int row = 0; row < dimRows + 2; row++)
+            for (int row = 0; row < dRE; row++)
             {
                 GameObject prefab = null;
                 int prefabIndex = map[row][col];
@@ -119,16 +139,20 @@ public class Puzzle : MonoBehaviour
                 if (prefabIndex >= 0 && prefabIndex < TilePrefabs.Count)
                     prefab = TilePrefabs[prefabIndex];
 
-                if (prefabIndex == -1)
+                if (prefabIndex == (int)ETile.In)
                     prefab = TileBeginPrefab;
 
-                if (prefabIndex == -2)
+                if (prefabIndex == (int)ETile.Out)
                     prefab = TileEndPrefab;
 
                 if (prefab == null)
                     continue;
 
-                GameObject tile = Instantiate(prefab, new Vector3(offsetX + (col + 1) * TileSize, offsetY + (row + 1) * -TileSize, 0), Quaternion.identity);
+                GameObject tile = Instantiate(
+                    prefab,
+                    new Vector3(offsetX + (col + 1) * TileSize, offsetY - (row + 1) * TileSize, 0),
+                    Quaternion.identity);
+
                 tile.transform.SetParent(transform);
             }
         }
@@ -198,6 +222,6 @@ public class Puzzle : MonoBehaviour
         x = destX;
         y = destY;
 
-        return new Vector2(offsetX + x * 4.21f, offsetY + y * -4.21f);
+        return new Vector2(offsetX + x * TileSize, offsetY - y * TileSize);
     }
 }
