@@ -1,7 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+<<<<<<< HEAD
 using UnityEngine;
+=======
+using UnityEngine;
+>>>>>>> 63e0e2a18f78f9b227956569df6b11fa26070c9e
 
 public class Puzzle : MonoBehaviour
 {
@@ -30,8 +34,15 @@ public class Puzzle : MonoBehaviour
     private void Start()
     {
         EndingPoints = new List<EndingPoint>();
+<<<<<<< HEAD
+        EndingPoints.Add(new EndingPoint(0, 4));
+        EndingPoints.Add(new EndingPoint(1, 0));
+=======
         EndingPoints.Add(new EndingPoint(0, 4, 0));
         EndingPoints.Add(new EndingPoint(1, 0, 0));
+
+        GeneratePuzzle(PuzzleMapExtended());
+>>>>>>> 63e0e2a18f78f9b227956569df6b11fa26070c9e
     }
 
     // ----------------------------------------------------------------
@@ -222,6 +233,12 @@ public class Puzzle : MonoBehaviour
         x = destX;
         y = destY;
 
+<<<<<<< HEAD
         return new Vector2(offsetX + x * TileSize, offsetY - y * TileSize);
     }
 }
+=======
+        return new Vector2(offsetX + x * 4.21f, offsetY + y * -4.21f);
+    }
+}
+>>>>>>> 63e0e2a18f78f9b227956569df6b11fa26070c9e

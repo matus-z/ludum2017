@@ -79,8 +79,7 @@ while True:
                     values[startPoint[0]][startPoint[1] - i] = color
                     positions.remove((startPoint[0], startPoint[1] - i))
 
-    for i in range(gridY, 0, -1):
-        print(values[i - 1])
+    ppsrint(values)
 
     #define the colormar
     X = np.array([
@@ -104,7 +103,6 @@ while True:
     konec = raw_input("Press Enter to continue or 'q' to exit... ")
     if konec == 's':
       with open('saved.txt', 'a') as f:
-        f.write('{} {} {}'.foramt(gridX, gridY, tileColors))
         for i in range(gridY, 0, -1):
             f.write('{}\n'.format(values[i - 1]))
         f.write('\n')
