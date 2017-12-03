@@ -2,57 +2,42 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// ----------------------------------------------------------------\
+// ----------------------------------------------------------------
 [RequireComponent(typeof(Rigidbody2D))]
 public class Player : MonoBehaviour
 {
     public float MovementSpeed = 10.0f;
 
-    private bool Moving;
+    public bool Moving { get; private set; }
 
     private Vector2 Destination;
+
+    public PositionOnGrid Pos;
 
     // ----------------------------------------------------------------
     private void Start()
     {
+        Pos = new PositionOnGrid(0, 0);
+        Moving = false;
     }
 
     // ----------------------------------------------------------------
     public void Init(PositionOnGrid pos, float offsetX, float offsetY, float tileSize)
     {
+        Pos = pos;
+
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        rb.position = new Vector3(offsetX + pos.X * tileSize, offsetY + pos.Y * tileSize, 0.0f);
+        rb.position = new Vector3(offsetX + Pos.X * tileSize, offsetY + Pos.Y * tileSize, 0.0f);
+        Destination = rb.position;
+
+        Moving = false;
     }
 
     // ----------------------------------------------------------------
-    private void Update()
+    public void MoveTo(Vector2 destination)
     {
-        if (Moving)
-            return;
-
-        bool isUp = Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W);
-        bool isDown= Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S);
-        bool isLeft = Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A);
-        bool isRight = Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D);
-
-        //if (isUp)
-        //{
-        //    destination = puzzle.getDestination(ref gridX, ref gridY, EDirection.Up);
-        //}
-        //else if (isRight)
-        //{
-        //    destination = puzzle.getDestination(ref gridX, ref gridY, EDirection.Right);
-        //}
-        //else if (isDown)
-        //{
-        //    destination = puzzle.getDestination(ref gridX, ref gridY, EDirection.Down);
-        //}
-        //else if (isLeft)
-        //{
-        //    destination = puzzle.getDestination(ref gridX, ref gridY, EDirection.Left);
-        //}
-
-        Moving = isUp || isDown || isLeft || isRight;
+        Destination = destination;
+        Moving = true;
     }
 
     // ----------------------------------------------------------------

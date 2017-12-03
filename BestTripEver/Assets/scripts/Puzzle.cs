@@ -78,70 +78,76 @@ public class Puzzle : MonoBehaviour
         }
     }
 
-    //// ----------------------------------------------------------------
-    //public Vector2 getDestination(ref int x, ref int y, EDirection d)
-    //{
-    //    var destX = x;
-    //    var destY = y;
-    //    switch (d)
-    //    {
-    //        case EDirection.Up:
-    //            for (int i = y - 1; i >= 0; i--)
-    //            {
-    //                if (puzzleMap[y - 1][x] == puzzleMap[i][x])
-    //                {
-    //                    destY = i;
-    //                }
-    //                else
-    //                {
-    //                    break;
-    //                }
-    //            }
-    //            break;
-    //        case EDirection.Right:
-    //            for (int i = x + 1; i < puzzleMap[y].Count; i++)
-    //            {
-    //                if (puzzleMap[y][x + 1] == puzzleMap[y][i])
-    //                {
-    //                    destX = i;
-    //                }
-    //                else
-    //                {
-    //                    break;
-    //                }
-    //            }
-    //            break;
-    //        case EDirection.Down:
-    //            for (int i = y + 1; i < puzzleMap.Count; i++)
-    //            {
-    //                if (puzzleMap[y + 1][x] == puzzleMap[i][x])
-    //                {
-    //                    destY = i;
-    //                }
-    //                else
-    //                {
-    //                    break;
-    //                }
-    //            }
-    //            break;
-    //        case EDirection.Left:
-    //            for (int i = x - 1; i >= 0; i--)
-    //            {
-    //                if (puzzleMap[y][x - 1] == puzzleMap[y][i])
-    //                {
-    //                    destX = i;
-    //                }
-    //                else
-    //                {
-    //                    break;
-    //                }
-    //            }
-    //            break;
-    //    }
+    // ----------------------------------------------------------------
+    public Vector2 GetDestination(MapInfo mi, ref PositionOnGrid playerPos, EDirection d)
+    {
+        int x = playerPos.X;
+        int y = playerPos.Y;
 
-    //    x = destX;
-    //    y = destY;
+        int destX = playerPos.X;
+        int destY = playerPos.Y;
 
-    //    return new Vector2(offsetX + x * TileSize, offsetY - y * TileSize);
-    //}
+        List<List<int>> map = mi.PuzzleMap;
+
+        switch (d)
+        {
+            case EDirection.Up:
+                for (int i = y + 1; i < map.Count; i++)
+                {
+                    if (map[y + 1][x] == map[i][x])
+                    {
+                        destY = i;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                break;
+            case EDirection.Right:
+                for (int i = x + 1; i < map[y].Count; i++)
+                {
+                    if (map[y][x + 1] == map[y][i])
+                    {
+                        destX = i;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                break;
+            case EDirection.Down:
+                for (int i = y - 1; i >= 0; i--)
+                {
+                    if (map[y - 1][x] == map[i][x])
+                    {
+                        destY = i;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                break;
+            case EDirection.Left:
+                for (int i = x - 1; i >= 0; i--)
+                {
+                    if (map[y][x - 1] == map[y][i])
+                    {
+                        destX = i;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                break;
+        }
+
+        playerPos.X = destX;
+        playerPos.Y = destY;
+
+        return new Vector2(OffsetX + destX * TileSize, OffsetY + destY * TileSize);
+    }
 }

@@ -16,6 +16,8 @@ public class GameController : MonoBehaviour
 
     private List<MapInfo> Maps;
 
+    private MapInfo CurrentMap;
+
     // ----------------------------------------------------------------
     private void Start()
     {
@@ -33,8 +35,40 @@ public class GameController : MonoBehaviour
 
         MapInfoLoader mapsLoader = new MapInfoLoader();
         Maps = mapsLoader.LoadFromFile();
+        if (Maps.Count <= 0)
+            return;
 
-        InitPuzzle(Maps[3]);
+        InitPuzzle(Maps[0]);
+    }
+
+    // ----------------------------------------------------------------
+    private void Update()
+    {
+        if (PlayerController.Moving)
+            return;
+
+        bool isUp = Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W);
+        bool isDown = Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S);
+        bool isLeft = Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A);
+        bool isRight = Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D);
+
+        bool isMove = isUp || isDown || isLeft || isRight;
+        if (!isMove)
+            return;
+
+        EDirection dir = EDirection.No;
+        if (isUp)
+            dir = EDirection.Up;
+        else if (isRight)
+            dir = EDirection.Right;
+        else if (isDown)
+            dir = EDirection.Down;
+        else if (isLeft)
+            dir = EDirection.Left;
+
+        Vector2 destination = PuzzleController.GetDestination(CurrentMap, ref PlayerController.Pos, dir);
+
+        PlayerController.MoveTo(destination);
     }
 
     // ----------------------------------------------------------------
@@ -46,6 +80,8 @@ public class GameController : MonoBehaviour
     // ----------------------------------------------------------------
     private void InitPuzzle(MapInfo mi)
     {
+        CurrentMap = mi;
+
         PuzzleController.Generate(mi, ZeroX, ZeroY);
         PositionOnGrid playerPos = PuzzleController.PlayerStartingPosRand(mi);
 
