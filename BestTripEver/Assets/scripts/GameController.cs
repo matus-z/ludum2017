@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 // ----------------------------------------------------------------
@@ -16,7 +15,9 @@ public class GameController : MonoBehaviour
 
     private List<MapInfo> Maps;
 
-    private MapInfo CurrentMap;
+    private int CurrentMapIndex = 0;
+
+    private bool GameOver = true;
 
     // ----------------------------------------------------------------
     private void Start()
@@ -38,7 +39,7 @@ public class GameController : MonoBehaviour
         if (Maps.Count <= 0)
             return;
 
-        InitPuzzle(Maps[0]);
+        InitPuzzle(CurrentMapIndex);
     }
 
     // ----------------------------------------------------------------
@@ -46,6 +47,13 @@ public class GameController : MonoBehaviour
     {
         if (PlayerController.Moving)
             return;
+
+        MapInfo currentMap = Maps[CurrentMapIndex];
+        if (currentMap.IsTileType(PlayerController.Pos, ETile.Out))
+        {
+            InitPuzzle(CurrentMapIndex + 1);
+            return;
+        }
 
         bool isUp = Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W);
         bool isDown = Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S);
@@ -66,7 +74,7 @@ public class GameController : MonoBehaviour
         else if (isLeft)
             dir = EDirection.Left;
 
-        Vector2 destination = PuzzleController.GetDestination(CurrentMap, ref PlayerController.Pos, dir);
+        Vector2 destination = PuzzleController.GetDestination(currentMap, ref PlayerController.Pos, dir);
         PlayerController.MoveTo(destination);
     }
 
@@ -77,12 +85,22 @@ public class GameController : MonoBehaviour
     }
 
     // ----------------------------------------------------------------
-    private void InitPuzzle(MapInfo mi)
+    private void InitPuzzle(int mapIndex)
     {
-        CurrentMap = mi;
+        if (mapIndex < 0 || mapIndex >= Maps.Count)
+        {
+            Debug.Log("Game Over.");
+            GameOver = true;
+            return;
+        }
 
-        PuzzleController.Generate(mi, ZeroX, ZeroY);
-        PositionOnGrid playerPos = PuzzleController.PlayerStartingPosRand(mi);
+        GameOver = false;
+
+        CurrentMapIndex = mapIndex;
+        MapInfo currentMap = Maps[mapIndex];
+
+        PuzzleController.Generate(currentMap, ZeroX, ZeroY);
+        PositionOnGrid playerPos = PuzzleController.PlayerStartingPosRand(currentMap);
         PlayerController.Init(playerPos, ZeroX, ZeroY, PuzzleController.TileSize);
     }
 

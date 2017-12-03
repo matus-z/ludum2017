@@ -26,7 +26,12 @@ public class MapInfoLoader
             if (line.Length <= 0)
             {
                 result.Add(new MapInfo(puzzleMap, endingPoints, sinPoints, powerupPoints, startingPosition));
+
                 puzzleMap = new List<List<int>>();
+                endingPoints = new List<EndingPoint>();
+                sinPoints = new List<SinPoint>();
+                powerupPoints = new List<PowerupPoint>();
+
                 continue;
             }
 

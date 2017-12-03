@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 // ----------------------------------------------------------------
@@ -15,11 +13,6 @@ public class Puzzle : MonoBehaviour
     
     // TODO Matus : out with this
     public float TileSize = 4.21f;
-
-    // ----------------------------------------------------------------
-    private void Start()
-    {
-    }
 
     // ----------------------------------------------------------------
     public PositionOnGrid PlayerStartingPosRand(MapInfo mi)
@@ -76,6 +69,13 @@ public class Puzzle : MonoBehaviour
                 tile.transform.SetParent(transform);
             }
         }
+    }
+
+    // ----------------------------------------------------------------
+    public void ClearBoard()
+    {
+        foreach (Transform child in transform)
+            GameObject.Destroy(child.gameObject);
     }
 
     // ----------------------------------------------------------------
