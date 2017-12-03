@@ -5,7 +5,7 @@ using UnityEngine;
 // ----------------------------------------------------------------
 public class PlayerController : MonoBehaviour
 {
-	public float MovementSpeed = 10.0f;
+    public float MovementSpeed = 10.0f;
 
     private Rigidbody2D RigidBody;
     private Vector2 Up;
@@ -14,45 +14,54 @@ public class PlayerController : MonoBehaviour
     private bool moving;
     private Vector2 destination;
 
-
     public Puzzle puzzle;
 
     // ----------------------------------------------------------------
-    private void Start ()
+    private void Start()
     {
-		RigidBody = GetComponent<Rigidbody2D>();
+        RigidBody = GetComponent<Rigidbody2D>();
         Up = new Vector3(1.0f, 0, 0);
-        RigidBody.position = puzzle.getDestination(ref gridX, ref gridY, ExtensionMethods.Direction.No);
+        RigidBody.position = puzzle.getDestination(ref gridX, ref gridY, EDirection.No);
     }
 
-    private void Update() {
-        if (!moving) {
-            if (Input.GetKeyDown(KeyCode.UpArrow)) {
-                destination = puzzle.getDestination(ref gridX, ref gridY, ExtensionMethods.Direction.Up);
-                moving = true;
-            } else if (Input.GetKeyDown(KeyCode.RightArrow)) {
-                destination = puzzle.getDestination(ref gridX, ref gridY, ExtensionMethods.Direction.Right);
-                moving = true;
-            }
-            else if (Input.GetKeyDown(KeyCode.DownArrow)) {
-                destination = puzzle.getDestination(ref gridX, ref gridY, ExtensionMethods.Direction.Down);
+    private void Update()
+    {
+        if (!moving)
+        {
+            if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
+            {
+                destination = puzzle.getDestination(ref gridX, ref gridY, EDirection.Up);
                 moving = true;
             }
-            else if (Input.GetKeyDown(KeyCode.LeftArrow)) {
-                destination = puzzle.getDestination(ref gridX, ref gridY, ExtensionMethods.Direction.Left);
+            else if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
+            {
+                destination = puzzle.getDestination(ref gridX, ref gridY, EDirection.Right);
                 moving = true;
             }
-
+            else if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
+            {
+                destination = puzzle.getDestination(ref gridX, ref gridY, EDirection.Down);
+                moving = true;
+            }
+            else if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
+            {
+                destination = puzzle.getDestination(ref gridX, ref gridY, EDirection.Left);
+                moving = true;
+            }
         }
     }
 
     // ----------------------------------------------------------------
-    private void FixedUpdate ()
+    private void FixedUpdate()
     {
-        if (moving) {
-            if (Vector2.Distance(RigidBody.position, destination) > 0.1f) {
+        if (moving)
+        {
+            if (Vector2.Distance(RigidBody.position, destination) > 0.1f)
+            {
                 RigidBody.MovePosition(Vector2.MoveTowards(RigidBody.position, destination, MovementSpeed * Time.fixedDeltaTime));
-            } else {
+            }
+            else
+            {
                 moving = false;
             }
         }
