@@ -67,7 +67,6 @@ public class GameController : MonoBehaviour
             dir = EDirection.Left;
 
         Vector2 destination = PuzzleController.GetDestination(CurrentMap, ref PlayerController.Pos, dir);
-
         PlayerController.MoveTo(destination);
     }
 
@@ -84,9 +83,6 @@ public class GameController : MonoBehaviour
 
         PuzzleController.Generate(mi, ZeroX, ZeroY);
         PositionOnGrid playerPos = PuzzleController.PlayerStartingPosRand(mi);
-
-        Debug.Log(playerPos.X + " " + playerPos.Y);
-
         PlayerController.Init(playerPos, ZeroX, ZeroY, PuzzleController.TileSize);
     }
 
