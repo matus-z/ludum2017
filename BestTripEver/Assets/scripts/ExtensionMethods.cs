@@ -23,4 +23,8 @@ public static class ExtensionMethods
 
         return v;
     }
+
+    public enum Direction {
+        Up, Right, Down, Left, No
+    }
 }
