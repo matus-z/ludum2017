@@ -19,6 +19,8 @@ public class GameController : MonoBehaviour
 
     private bool GameOver = true;
 
+    private List<ESin> UnlockedSins;
+
     // ----------------------------------------------------------------
     private void Start()
     {
@@ -39,12 +41,20 @@ public class GameController : MonoBehaviour
         if (Maps.Count <= 0)
             return;
 
+        UnlockedSins = new List<ESin>();
+
+        // TODO Matus : init unlocked sins from where?
+        UnlockedSins.Add(ESin.Lust);
+
         InitPuzzle(CurrentMapIndex);
     }
 
     // ----------------------------------------------------------------
     private void Update()
     {
+        if (GameOver)
+            return;
+
         if (PlayerController.Moving)
             return;
 
@@ -55,6 +65,17 @@ public class GameController : MonoBehaviour
             return;
         }
 
+        EDirection dir = DirectionFromKeyboard();
+        if (dir == EDirection.No)
+            return;
+
+        Vector2 destination = PuzzleController.GetDestination(currentMap, ref PlayerController.Pos, dir);
+        PlayerController.MoveTo(destination);
+    }
+
+    // ----------------------------------------------------------------
+    private EDirection DirectionFromKeyboard()
+    {
         bool isUp = Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W);
         bool isDown = Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S);
         bool isLeft = Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A);
@@ -62,20 +83,18 @@ public class GameController : MonoBehaviour
 
         bool isMove = isUp || isDown || isLeft || isRight;
         if (!isMove)
-            return;
+            return EDirection.No;
 
-        EDirection dir = EDirection.No;
         if (isUp)
-            dir = EDirection.Up;
+            return EDirection.Up;
         else if (isRight)
-            dir = EDirection.Right;
+            return EDirection.Right;
         else if (isDown)
-            dir = EDirection.Down;
+            return EDirection.Down;
         else if (isLeft)
-            dir = EDirection.Left;
+            return EDirection.Left;
 
-        Vector2 destination = PuzzleController.GetDestination(currentMap, ref PlayerController.Pos, dir);
-        PlayerController.MoveTo(destination);
+        return EDirection.No;
     }
 
     // ----------------------------------------------------------------
@@ -101,10 +120,13 @@ public class GameController : MonoBehaviour
 
         currentMap.DebugLog();
 
+        ZeroX = PlayerController.transform.position.x;
+        ZeroY = PlayerController.transform.position.y;
+
         PuzzleController.ClearBoard();
         PuzzleController.Generate(currentMap, ZeroX, ZeroY);
         PositionOnGrid playerPos = PuzzleController.PlayerStartingPosRand(currentMap);
-        PlayerController.Init(playerPos, ZeroX, ZeroY, PuzzleController.TileSize);
+        PlayerController.Init(playerPos, ZeroX, ZeroY, PuzzleController.TileSize, UnlockedSins);
     }
 
     // ----------------------------------------------------------------

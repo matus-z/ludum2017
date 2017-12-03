@@ -101,6 +101,10 @@ public class Puzzle : MonoBehaviour
         if (false == mi.IsDefined(nextPos) || mi.IsTileType(nextPos, ETile.Void))
             return GetDestinationFromTile(playerPos);
 
+        // Can not move from board back to in tile
+        if (mi.IsTileType(playerPos, ETile.In) == false && mi.IsTileType(nextPos, ETile.In))
+            return GetDestinationFromTile(playerPos);
+
         // If in or out, move just one tile
         if (mi.IsTileType(nextPos, ETile.In) || mi.IsTileType(nextPos, ETile.Out))
         {

@@ -61,6 +61,6 @@ MonoBehaviour:
   - {fileID: 1575105842943310, guid: e68ff45d421f6624c8d960e1d91b5357, type: 2}
   TileBeginPrefab: {fileID: 1575105842943310, guid: 206c54c12745af64ba00f07eebfe8b0b,
     type: 2}
-  TileEndPrefab: {fileID: 1575105842943310, guid: a6bdf9a1e83292b4093865fb67821cd6,
+  TileEndPrefab: {fileID: 1543839584411530, guid: bfe79029f8f909142b7c38fba794562d,
     type: 2}
   TileSize: 4.21
