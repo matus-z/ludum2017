@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// ----------------------------------------------------------------
+// ----------------------------------------------------------------\
+[RequireComponent(typeof(Rigidbody2D))]
 public class Player : MonoBehaviour
 {
     public float MovementSpeed = 10.0f;
-
-    private Rigidbody2D RigidBody;
 
     private bool Moving;
 
@@ -16,13 +15,13 @@ public class Player : MonoBehaviour
     // ----------------------------------------------------------------
     private void Start()
     {
-        RigidBody = GetComponent<Rigidbody2D>();
     }
 
     // ----------------------------------------------------------------
-    public void Init(int GridX, int GridY)
+    public void Init(PositionOnGrid pos, float offsetX, float offsetY, float tileSize)
     {
-        //RigidBody.position = puzzle.getDestination(ref gridX, ref gridY, EDirection.No);
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        rb.position = new Vector3(offsetX + pos.X * tileSize, offsetY + pos.Y * tileSize, 0.0f);
     }
 
     // ----------------------------------------------------------------
@@ -62,19 +61,14 @@ public class Player : MonoBehaviour
         if (!Moving)
             return;
 
-        if (Vector2.Distance(RigidBody.position, Destination) > 0.1f)
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        if (Vector2.Distance(rb.position, Destination) > 0.1f)
         {
-            RigidBody.MovePosition(Vector2.MoveTowards(RigidBody.position, Destination, MovementSpeed * Time.fixedDeltaTime));
+            rb.MovePosition(Vector2.MoveTowards(rb.position, Destination, MovementSpeed * Time.fixedDeltaTime));
         }
         else
         {
             Moving = false;
         }
-    }
-
-    // ----------------------------------------------------------------
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.yellow;
     }
 }

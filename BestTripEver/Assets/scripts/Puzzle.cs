@@ -3,28 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+// ----------------------------------------------------------------
 public class Puzzle : MonoBehaviour
 {
     public List<GameObject> TilePrefabs;
     public GameObject TileBeginPrefab;
     public GameObject TileEndPrefab;
 
-    public float offsetX = 0.0f;
-    public float offsetY = 0.0f;
-
-    //public EDirection InPos = EDirection.Down;
-    //public List<EndingPoint> EndingPoints;
-
-    //List<List<int>> puzzleMap = new List<List<int>> {
-    //    new List<int>() {1, 0, 0, 0, 0, 1},
-    //    new List<int>() {1, 0, 2, 2, 1, 1},
-    //    new List<int>() {2, 0, 2, 2, 2, 1},
-    //    new List<int>() {1, 0, 0, 1, 2, 1},
-    //    new List<int>() {1, 1, 2, 1, 1, 1},
-    //    new List<int>() {1, 1, 2, 0, 0, 0},
-    //};
-
-    private float TileSize = 4.21f;
+    private float OffsetX = 0.0f;
+    private float OffsetY = 0.0f;
+    
+    // TODO Matus : out with this
+    public float TileSize = 4.21f;
 
     // ----------------------------------------------------------------
     private void Start()
@@ -32,79 +22,33 @@ public class Puzzle : MonoBehaviour
     }
 
     // ----------------------------------------------------------------
-    private int PlayerStartingPosRand(MapInfo mi)
+    public PositionOnGrid PlayerStartingPosRand(MapInfo mi)
     {
-        return Random.Range(0, mi.StartingPosition == EDirection.Up || mi.StartingPosition == EDirection.Down ? mi.DimRows() : mi.DimCols());
+        switch(mi.StartingPosition)
+        {
+            case EDirection.Up:
+                return new PositionOnGrid(Random.Range(0, mi.DimCols()) + 1, mi.DimRowsExtended() - 1);
+            case EDirection.Down:
+                return new PositionOnGrid(Random.Range(0, mi.DimCols()) + 1, 0);
+            case EDirection.Left:
+                return new PositionOnGrid(0, Random.Range(0, mi.DimRows()) + 1);
+            case EDirection.Right:
+                return new PositionOnGrid(mi.DimColsExtended() - 1, Random.Range(0, mi.DimRows()) + 1);
+        }
+
+        return new PositionOnGrid(0, 0);
     }
 
     // ----------------------------------------------------------------
-    private List<List<int>> PuzzleMapExtended(MapInfo mi)
+    public void Generate(MapInfo mi, float offsetX, float offsetY)
     {
-        List<List<int>> res = new List<List<int>>();
+        OffsetX = offsetX;
+        OffsetY = offsetY;
 
-        int dC = mi.DimCols();
-        int dR = mi.DimRows();
+        List<List<int>> map = mi.PuzzleMapExtended;
         int dCE = mi.DimColsExtended();
         int dRE = mi.DimRowsExtended();
 
-        // Fill extended map with empty tiles
-        for (int col = 0; col < dCE; col++)
-        {
-            res.Add(new List<int>());
-            for (int row = 0; row < dRE; row++)
-            {
-                res[res.Count - 1].Add((int)ETile.Void);
-            }
-        }
-
-        // Add defined unextended tiles
-        for (int col = 0; col < dC; col++)
-        {
-            for (int row = 0; row < dR; row++)
-            {
-                res[row + 1][col + 1] = mi.PuzzleMap[row][col];
-            }
-        }
-
-        // Add tiles for in direction
-        switch (mi.StartingPosition)
-        {
-            case EDirection.Up:
-                for (int i = 0; i < dC; i++)
-                    res[0][i + 1] = (int)ETile.In;
-                break;
-            case EDirection.Right:
-                for (int i = 0; i < dR; i++)
-                    res[i + 1][dC + 1] = (int)ETile.In;
-                break;
-            case EDirection.Down:
-                for (int i = 0; i < dC; i++)
-                    res[dR + 1][i + 1] = (int)ETile.In;
-                break;
-            case EDirection.Left:
-                for (int i = 0; i < dR; i++)
-                    res[i + 1][0] = (int)ETile.In;
-                break;
-        }
-
-        // Add tiles for in out directions
-        foreach (EndingPoint ep in mi.EndingPoints)
-            res[ep.X][ep.Y] = (int)ETile.Out;
-
-        return res;
-    }
-
-    // ----------------------------------------------------------------
-    public void Generate(MapInfo mi)
-    {
-        List<List<int>> puzzleMap = PuzzleMapExtended(mi);
-
-        GenerateExended(puzzleMap, mi.DimColsExtended(), mi.DimRowsExtended());
-    }
-
-    // ----------------------------------------------------------------
-    private void GenerateExended(List<List<int>> map, int dCE, int dRE)
-    {
         for (int col = 0; col < dCE; col++)
         {
             for (int row = 0; row < dRE; row++)
@@ -126,7 +70,7 @@ public class Puzzle : MonoBehaviour
 
                 GameObject tile = Instantiate(
                     prefab,
-                    new Vector3(offsetX + (col + 1) * TileSize, offsetY - (row + 1) * TileSize, 0),
+                    new Vector3(OffsetX + col * TileSize, OffsetY + row * TileSize, 0),
                     Quaternion.identity);
 
                 tile.transform.SetParent(transform);

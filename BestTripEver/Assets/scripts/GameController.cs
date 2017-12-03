@@ -11,6 +11,9 @@ public class GameController : MonoBehaviour
     private Puzzle PuzzleController;
     private Player PlayerController;
 
+    private float ZeroX = 0;
+    private float ZeroY = 0;
+
     // ----------------------------------------------------------------
     private void Start()
     {
@@ -25,6 +28,10 @@ public class GameController : MonoBehaviour
 
         PuzzleController = pz;
         PlayerController = pl;
+
+        // ...
+        if(Ok())
+            InitSamplePuzzle();
     }
 
     // ----------------------------------------------------------------
@@ -34,7 +41,7 @@ public class GameController : MonoBehaviour
     }
 
     // ----------------------------------------------------------------
-    private void InitPuzzle()
+    private void InitSamplePuzzle()
     {
         // TODO Matus : place somewhere else
         List<List<int>> puzzleMap = new List<List<int>> {
@@ -63,6 +70,18 @@ public class GameController : MonoBehaviour
             powerupPoints,
             EDirection.Down);
 
-        PuzzleController.Generate(mi);
+        PuzzleController.Generate(mi, ZeroX, ZeroY);
+        PositionOnGrid playerPos = PuzzleController.PlayerStartingPosRand(mi);
+
+        Debug.Log(playerPos.X + " " + playerPos.Y);
+
+        PlayerController.Init(playerPos, ZeroX, ZeroY, PuzzleController.TileSize);
+    }
+
+    // ----------------------------------------------------------------
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawSphere(new Vector3(ZeroX, ZeroY, 0.0f), 0.3f);
     }
 }

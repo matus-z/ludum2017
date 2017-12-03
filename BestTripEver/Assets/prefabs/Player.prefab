@@ -100,8 +100,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MovementSpeed: 10
-  gridX: 3
-  gridY: 5
 --- !u!212 &212560659178804726
 SpriteRenderer:
   m_ObjectHideFlags: 1

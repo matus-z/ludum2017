@@ -63,6 +63,4 @@ MonoBehaviour:
     type: 2}
   TileEndPrefab: {fileID: 1575105842943310, guid: a6bdf9a1e83292b4093865fb67821cd6,
     type: 2}
-  offsetX: 0
-  offsetY: 0
-  InDir: 2
+  TileSize: 4.21
