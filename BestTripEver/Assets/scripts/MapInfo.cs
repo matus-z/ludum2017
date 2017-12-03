@@ -101,4 +101,16 @@ public class MapInfo
 
         return res;
     }
+
+    // ----------------------------------------------------------------
+    public bool IsDefined(PositionOnGrid p)
+    {
+        return p.X >= 0 && p.Y >= 0 && p.X < DimColsExtended() && p.Y < DimRowsExtended();
+    }
+
+    // ----------------------------------------------------------------
+    public bool IsTileType(PositionOnGrid p, ETile type)
+    {
+        return (int)type == PuzzleMapExtended[p.Y][p.X];
+    }
 }

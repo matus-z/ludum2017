@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 // ----------------------------------------------------------------
 public class PositionOnGrid
@@ -14,5 +15,24 @@ public class PositionOnGrid
     {
         X = x;
         Y = y;
+    }
+
+    // ----------------------------------------------------------------
+    public PositionOnGrid NextPos(EDirection d)
+    {
+        switch (d)
+        {
+            case EDirection.Up:
+                return new PositionOnGrid(X, Y + 1);
+            case EDirection.Right:
+                return new PositionOnGrid(X + 1, Y);
+            case EDirection.Down:
+                return new PositionOnGrid(X, Y - 1);
+            case EDirection.Left:
+                return new PositionOnGrid(X - 1, Y);
+        }
+
+        Debug.Log("Should not get here!");
+        return this;
     }
 }

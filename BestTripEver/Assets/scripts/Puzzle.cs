@@ -79,6 +79,12 @@ public class Puzzle : MonoBehaviour
     }
 
     // ----------------------------------------------------------------
+    private Vector2 GetDestinationFromTile(PositionOnGrid pos)
+    {
+        return new Vector2(OffsetX + pos.X * TileSize, OffsetY + pos.Y * TileSize);
+    }
+
+    // ----------------------------------------------------------------
     public Vector2 GetDestination(MapInfo mi, ref PositionOnGrid playerPos, EDirection d)
     {
         int x = playerPos.X;
@@ -87,8 +93,22 @@ public class Puzzle : MonoBehaviour
         int destX = playerPos.X;
         int destY = playerPos.Y;
 
-        List<List<int>> map = mi.PuzzleMap;
+        List<List<int>> map = mi.PuzzleMapExtended;
 
+        PositionOnGrid nextPos = playerPos.NextPos(d);
+
+        // Ca not move if undef or void
+        if (false == mi.IsDefined(nextPos) || mi.IsTileType(nextPos, ETile.Void))
+            return GetDestinationFromTile(playerPos);
+
+        // If in or out, move just one tile
+        if (mi.IsTileType(nextPos, ETile.In) || mi.IsTileType(nextPos, ETile.Out))
+        {
+            playerPos = nextPos;
+            return GetDestinationFromTile(playerPos);
+        }
+
+        // Else inside map - move through all tiles with the same color
         switch (d)
         {
             case EDirection.Up:
@@ -148,6 +168,6 @@ public class Puzzle : MonoBehaviour
         playerPos.X = destX;
         playerPos.Y = destY;
 
-        return new Vector2(OffsetX + destX * TileSize, OffsetY + destY * TileSize);
+        return GetDestinationFromTile(playerPos);
     }
 }
