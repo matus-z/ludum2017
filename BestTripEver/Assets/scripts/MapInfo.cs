@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 // ----------------------------------------------------------------
 public class MapInfo
@@ -109,5 +110,11 @@ public class MapInfo
     public bool IsTileType(PositionOnGrid p, ETile type)
     {
         return (int)type == PuzzleMapExtended[p.Y][p.X];
+    }
+
+    // ----------------------------------------------------------------
+    public void DebugLog()
+    {
+        Debug.Log("Map: [r,x]=[" + DimRows() + "," + DimCols() + "] Ends[" + EndingPoints.Count + "] Poweups[" + PowerupPoints.Count + "] Sins[" + SinPoints.Count + "] Start[" + StartingPosition + "]");
     }
 }

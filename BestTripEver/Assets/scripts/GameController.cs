@@ -99,6 +99,9 @@ public class GameController : MonoBehaviour
         CurrentMapIndex = mapIndex;
         MapInfo currentMap = Maps[mapIndex];
 
+        currentMap.DebugLog();
+
+        PuzzleController.ClearBoard();
         PuzzleController.Generate(currentMap, ZeroX, ZeroY);
         PositionOnGrid playerPos = PuzzleController.PlayerStartingPosRand(currentMap);
         PlayerController.Init(playerPos, ZeroX, ZeroY, PuzzleController.TileSize);
