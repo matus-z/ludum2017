@@ -152,10 +152,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9b67466fcc94064ea065a6e040d7730, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tilePrefab: {fileID: 1575105842943310, guid: 7457898d9a25d14498c672bc490e023e, type: 2}
+  TilePrefabs:
+  - {fileID: 1575105842943310, guid: 3abfc6c6b328d3640a90c83b735167eb, type: 2}
+  - {fileID: 1575105842943310, guid: 52f7dfda55e4f2842b9bd58c3248fb5f, type: 2}
+  - {fileID: 1575105842943310, guid: 8a6cd5bea98c7bc478e55532e26c2cef, type: 2}
+  - {fileID: 1575105842943310, guid: 36deb1dd07bb0e648a6fee84ba52e305, type: 2}
+  - {fileID: 1575105842943310, guid: c0f7796f1af00944fbd4c5e58369c233, type: 2}
+  - {fileID: 1575105842943310, guid: 437b2b14dd007dc4b9d6b6e9a007a4f8, type: 2}
+  - {fileID: 1575105842943310, guid: e68ff45d421f6624c8d960e1d91b5357, type: 2}
+  TileBeginPrefab: {fileID: 1575105842943310, guid: 206c54c12745af64ba00f07eebfe8b0b,
+    type: 2}
+  TileEndPrefab: {fileID: 1575105842943310, guid: a6bdf9a1e83292b4093865fb67821cd6,
+    type: 2}
   offsetX: 0
   offsetY: 0
---- !u!1001 &746389429
+--- !u!4 &894783379 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 4868967130741816, guid: fdd0b242e62afb44880eb9da0b64e4dc,
+    type: 2}
+  m_PrefabInternal: {fileID: 1191531182}
+--- !u!1001 &1191531182
 Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -194,39 +210,14 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 114229189995086898, guid: fdd0b242e62afb44880eb9da0b64e4dc,
-        type: 2}
-      propertyPath: MovementSpeed
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 114229189995086898, guid: fdd0b242e62afb44880eb9da0b64e4dc,
-        type: 2}
-      propertyPath: puzzle
-      value: 
-      objectReference: {fileID: 515020483}
-    - target: {fileID: 61075658438710028, guid: fdd0b242e62afb44880eb9da0b64e4dc,
-        type: 2}
-      propertyPath: m_Offset.y
-      value: 1.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 114229189995086898, guid: fdd0b242e62afb44880eb9da0b64e4dc,
-        type: 2}
-      propertyPath: gridX
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 114229189995086898, guid: fdd0b242e62afb44880eb9da0b64e4dc,
-        type: 2}
-      propertyPath: gridY
-      value: 5
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: fdd0b242e62afb44880eb9da0b64e4dc, type: 2}
   m_IsPrefabParent: 0
---- !u!4 &894783379 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 4868967130741816, guid: fdd0b242e62afb44880eb9da0b64e4dc,
+--- !u!1 &1292917154 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1669214663052278, guid: fdd0b242e62afb44880eb9da0b64e4dc,
     type: 2}
-  m_PrefabInternal: {fileID: 746389429}
+  m_PrefabInternal: {fileID: 1191531182}
 --- !u!1 &1603315481
 GameObject:
   m_ObjectHideFlags: 0
@@ -239,6 +230,7 @@ GameObject:
   - component: {fileID: 1603315483}
   - component: {fileID: 1603315482}
   - component: {fileID: 1603315486}
+  - component: {fileID: 1603315487}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -322,3 +314,16 @@ MonoBehaviour:
   target: {fileID: 894783379}
   distance: -10
   damping: 1
+--- !u!114 &1603315487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1603315481}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 946a63ef236844b468bb690c083923c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PuzzleGO: {fileID: 515020481}
+  PlayerGO: {fileID: 1292917154}

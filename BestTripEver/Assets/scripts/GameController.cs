@@ -25,6 +25,7 @@ public class GameController : MonoBehaviour
 
         PuzzleController = pz;
         PlayerController = pl;
+        InitPuzzle();
     }
 
     // ----------------------------------------------------------------
@@ -57,7 +58,7 @@ public class GameController : MonoBehaviour
         List<PowerupPoint> powerupPoints = new List<PowerupPoint>();
 
         MapInfo mi = new MapInfo(
-            puzzleMap, 
+            puzzleMap,
             endingPoints,
             sinPoints,
             powerupPoints,
