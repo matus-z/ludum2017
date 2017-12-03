@@ -1,21 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Puzzle : MonoBehaviour
 {
     public List<GameObject> TilePrefabs;
-    public GameObject MiddleTilePrefab;
+    public GameObject TileBeginPrefab;
+    public GameObject TileEndPrefab;
 
-    List<Color> colors = new List<Color>() {
-        new Color(0.33f, 0, 0),
-        new Color(0, 0.33f, 0),
-        new Color(0, 0, 0.33f),
-        new Color(0.33f, 0.33f, 0),
-        new Color(0.33f, 0, 0.33f),
-        new Color(0, 0.33f, 0.33f),
-        new Color(0.33f, 0.33f, 0.33f)
-    };
+    public float offsetX = 0.0f;
+    public float offsetY = 0.0f;
+
+    public EDirection InDir = EDirection.Down;
+    public List<EndingPoint> EndingPoints;
 
     List<List<int>> puzzleMap = new List<List<int>> {
         new List<int>() {1, 0, 0, 0, 0, 1},
@@ -26,21 +24,117 @@ public class Puzzle : MonoBehaviour
         new List<int>() {1, 1, 2, 0, 0, 0},
     };
 
-    public float offsetX = 0.0f;
-    public float offsetY = 0.0f;
+    private float TileSize = 4.21f;
 
-    void generatePuzzle()
+    // ----------------------------------------------------------------
+    void Start()
     {
-        for (int i = 0; i < puzzleMap.Count; i++)
+        EndingPoints = new List<EndingPoint>();
+        EndingPoints.Add(new EndingPoint(0, 4));
+        EndingPoints.Add(new EndingPoint(1, 0));
+
+        GeneratePuzzle(PuzzleMapExtended());
+    }
+
+    // ----------------------------------------------------------------
+    private int DimCols()
+    {
+        return puzzleMap.Count;
+    }
+
+    // ----------------------------------------------------------------
+    private int DimRows()
+    {
+        if (puzzleMap.Count <= 0)
+            return 0;
+
+        int maxY = puzzleMap.Max(obj => obj.Count);
+        return maxY;
+    }
+
+    // ----------------------------------------------------------------
+    private List<List<int>> PuzzleMapExtended()
+    {
+        List<List<int>> res = new List<List<int>>();
+
+        int dimCols = DimCols();
+        int dimRows = DimRows();
+
+        for (int col = 0; col < dimCols + 2; col++)
         {
-            for (int j = 0; j < puzzleMap[i].Count; j++)
+            res.Add(new List<int>());
+            for (int row = 0; row < dimRows + 2; row++)
             {
-                GameObject tile = Instantiate(TilePrefabs[puzzleMap[j][i]], new Vector3(offsetX + i * 4.21f, offsetY + j * -4.21f, 0), Quaternion.identity);
+                res[res.Count - 1].Add(-10);
+            }
+        }
+
+        for (int col = 0; col < dimCols; col++)
+        {
+            for (int row = 0; row < dimRows; row++)
+            {
+                res[row + 1][col + 1] = puzzleMap[row][col];
+            }
+        }
+
+        switch (InDir)
+        {
+            case EDirection.Up:
+                for (int i = 0; i < dimCols; i++)
+                    res[0][i + 1] = -1;
+                break;
+            case EDirection.Right:
+                for (int i = 0; i < dimRows; i++)
+                    res[i + 1][dimCols + 1] = -1;
+                break;
+            case EDirection.Down:
+                for (int i = 0; i < dimCols; i++)
+                    res[dimRows + 1][i + 1] = -1;
+                break;
+            case EDirection.Left:
+                for (int i = 0; i < dimRows; i++)
+                    res[i + 1][0] = -1;
+                break;
+        }
+
+        foreach (EndingPoint ep in EndingPoints)
+            res[ep.X][ep.Y] = -2;
+
+        return res;
+    }
+
+    // ----------------------------------------------------------------
+    void GeneratePuzzle(List<List<int>> map)
+    {
+        int dimCols = DimCols();
+        int dimRows = DimRows();
+
+        for (int col = 0; col < dimCols + 2; col++)
+        {
+            for (int row = 0; row < dimRows + 2; row++)
+            {
+                GameObject prefab = null;
+                int prefabIndex = map[row][col];
+
+                if (prefabIndex >= 0 && prefabIndex < TilePrefabs.Count)
+                    prefab = TilePrefabs[prefabIndex];
+
+                if (prefabIndex == -1)
+                    prefab = TileBeginPrefab;
+
+                if (prefabIndex == -2)
+                    prefab = TileEndPrefab;
+
+                if (prefab == null)
+                    continue;
+
+                GameObject tile = Instantiate(prefab, new Vector3(offsetX + (col + 1) * TileSize, offsetY + (row + 1) * -TileSize, 0), Quaternion.identity);
                 tile.transform.SetParent(transform);
             }
         }
     }
 
+    // ----------------------------------------------------------------
     public Vector2 getDestination(ref int x, ref int y, EDirection d)
     {
         var destX = x;
@@ -100,13 +194,10 @@ public class Puzzle : MonoBehaviour
                 }
                 break;
         }
+
         x = destX;
         y = destY;
-        return new Vector2(offsetX + x * 4.21f, offsetY + y * -4.21f);
-    }
 
-    void Start()
-    {
-        generatePuzzle();
+        return new Vector2(offsetX + x * 4.21f, offsetY + y * -4.21f);
     }
 }

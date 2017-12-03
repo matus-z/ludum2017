@@ -160,11 +160,13 @@ MonoBehaviour:
   - {fileID: 1575105842943310, guid: c0f7796f1af00944fbd4c5e58369c233, type: 2}
   - {fileID: 1575105842943310, guid: 437b2b14dd007dc4b9d6b6e9a007a4f8, type: 2}
   - {fileID: 1575105842943310, guid: e68ff45d421f6624c8d960e1d91b5357, type: 2}
-  MiddleTilePrefab: {fileID: 1575105842943310, guid: 206c54c12745af64ba00f07eebfe8b0b,
+  TileBeginPrefab: {fileID: 1575105842943310, guid: 206c54c12745af64ba00f07eebfe8b0b,
     type: 2}
-  tilePrefab: {fileID: 1575105842943310, guid: 7457898d9a25d14498c672bc490e023e, type: 2}
+  TileEndPrefab: {fileID: 1575105842943310, guid: a6bdf9a1e83292b4093865fb67821cd6,
+    type: 2}
   offsetX: 0
   offsetY: 0
+  InDir: 2
 --- !u!1001 &746389429
 Prefab:
   m_ObjectHideFlags: 0
@@ -290,7 +292,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 15
+  orthographic size: 30
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2

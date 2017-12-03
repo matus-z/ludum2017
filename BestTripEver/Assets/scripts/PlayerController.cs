@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
         RigidBody.position = puzzle.getDestination(ref gridX, ref gridY, EDirection.No);
     }
 
+    // ----------------------------------------------------------------
     private void Update()
     {
         if (!moving)
