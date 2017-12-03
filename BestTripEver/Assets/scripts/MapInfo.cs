@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 // ----------------------------------------------------------------
 public class MapInfo
@@ -26,13 +27,13 @@ public class MapInfo
     }
 
     // ----------------------------------------------------------------
-    public int DimCols()
+    public int DimRows()
     {
         return PuzzleMap.Count;
     }
 
     // ----------------------------------------------------------------
-    public int DimRows()
+    public int DimCols()
     {
         if (PuzzleMap.Count <= 0)
             return 0;
@@ -41,33 +42,33 @@ public class MapInfo
     }
 
     // ----------------------------------------------------------------
-    public int DimColsExtended() { return DimCols() + 2; }
     public int DimRowsExtended() { return DimRows() + 2; }
+    public int DimColsExtended() { return DimCols() + 2; }
 
     // ----------------------------------------------------------------
     private List<List<int>> ComputePuzzleMapExtended()
     {
         List<List<int>> res = new List<List<int>>();
 
-        int dC = DimCols();
         int dR = DimRows();
-        int dCE = DimColsExtended();
+        int dC = DimCols();
         int dRE = DimRowsExtended();
+        int dCE = DimColsExtended();
 
         // Fill extended map with empty tiles
-        for (int col = 0; col < dCE; col++)
+        for (int row = 0; row < dRE; row++)
         {
             res.Add(new List<int>());
-            for (int row = 0; row < dRE; row++)
+            for (int col = 0; col < dCE; col++)
             {
                 res[res.Count - 1].Add((int)ETile.Void);
             }
         }
 
         // Add defined unextended tiles
-        for (int col = 0; col < dC; col++)
+        for (int row = 0; row < dR; row++)
         {
-            for (int row = 0; row < dR; row++)
+            for (int col = 0; col < dC; col++)
             {
                 res[row + 1][col + 1] = PuzzleMap[row][col];
             }
