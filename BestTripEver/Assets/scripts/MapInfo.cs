@@ -87,11 +87,11 @@ public class MapInfo
                 break;
             case EDirection.Left:
                 for (int i = 0; i < dR; i++)
-                    res[i + 1][dC + 1] = (int)ETile.In;
+                    res[i + 1][0] = (int)ETile.In;
                 break;
             case EDirection.Right:
                 for (int i = 0; i < dR; i++)
-                    res[i + 1][0] = (int)ETile.In;
+                    res[i + 1][dC + 1] = (int)ETile.In;
                 break;
         }
 
