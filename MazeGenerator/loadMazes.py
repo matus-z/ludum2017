@@ -33,7 +33,9 @@ def drawMap(values):
         [0., 1., 1.],  #cyan
         [0., 0., 0.]  #black
     ])
-    mycmap = array2cmap(X[:tileColors])
+    f = lambda a, b: a if (a > b) else b
+    tileColors = reduce(f, map(lambda x: reduce(f, x), values))
+    mycmap = array2cmap(X[:tileColors + 1])
 
     plt.gca().pcolormesh(values, cmap=mycmap)
 
@@ -56,8 +58,3 @@ with open('saved.txt', 'r') as f:
         elif line[0] == '[':
             line = line.strip()
             values.insert(0, eval(line))
-        else:
-            words = line.split(' ')
-            gridX = int(words[0])
-            gridY = int(words[1])
-            tileColors = int(words[2])
