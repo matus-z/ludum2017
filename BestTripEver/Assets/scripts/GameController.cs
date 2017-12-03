@@ -11,16 +11,6 @@ public class GameController : MonoBehaviour
     private Puzzle PuzzleController;
     private Player PlayerController;
 
-    // TODO Matus : place somewhere else
-    List<List<int>> puzzleMap = new List<List<int>> {
-        new List<int>() {1, 0, 0, 0, 0, 1},
-        new List<int>() {1, 0, 2, 2, 1, 1},
-        new List<int>() {2, 0, 2, 2, 2, 1},
-        new List<int>() {1, 0, 0, 1, 2, 1},
-        new List<int>() {1, 1, 2, 1, 1, 1},
-        new List<int>() {1, 1, 2, 0, 0, 0},
-    };
-
     // ----------------------------------------------------------------
     private void Start()
     {
@@ -46,6 +36,33 @@ public class GameController : MonoBehaviour
     // ----------------------------------------------------------------
     private void InitPuzzle()
     {
+        // TODO Matus : place somewhere else
+        List<List<int>> puzzleMap = new List<List<int>> {
+        new List<int>() {1, 0, 0, 0, 0, 1},
+        new List<int>() {1, 0, 2, 2, 1, 1},
+        new List<int>() {2, 0, 2, 2, 2, 1},
+        new List<int>() {1, 0, 0, 1, 2, 1},
+        new List<int>() {1, 1, 2, 1, 1, 1},
+        new List<int>() {1, 1, 2, 0, 0, 0},
+        };
+
+        List<EndingPoint> endingPoints;
+
+        endingPoints = new List<EndingPoint>();
+
+        endingPoints.Add(new EndingPoint(0, 4, 0));
+        endingPoints.Add(new EndingPoint(1, 0, 0));
+
+        List<SinPoint> sinPoints = new List<SinPoint>();
+        List<PowerupPoint> powerupPoints = new List<PowerupPoint>();
+
+        MapInfo mi = new MapInfo(
+            puzzleMap, 
+            endingPoints,
+            sinPoints,
+            powerupPoints,
+            EDirection.Down);
+
         PuzzleController.Generate(mi);
     }
 }

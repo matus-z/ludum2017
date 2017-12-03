@@ -29,33 +29,12 @@ public class Puzzle : MonoBehaviour
     // ----------------------------------------------------------------
     private void Start()
     {
-        EndingPoints = new List<EndingPoint>();
-        EndingPoints.Add(new EndingPoint(0, 4, 0));
-        EndingPoints.Add(new EndingPoint(1, 0, 0));
     }
 
     // ----------------------------------------------------------------
-    private int DimCols()
+    private int PlayerStartingPosRand(MapInfo mi)
     {
-        return puzzleMap.Count;
-    }
-
-    // ----------------------------------------------------------------
-    private int DimRows()
-    {
-        if (puzzleMap.Count <= 0)
-            return 0;
-
-        return puzzleMap.Max(obj => obj.Count);
-    }
-
-    private int DimColsExtended() { return DimCols() + 2; }
-    private int DimRowsExtended() { return DimRows() + 2; }
-
-    // ----------------------------------------------------------------
-    private int PlayerStartingPosRand()
-    {
-        return Random.Range(0, InPos == EDirection.Up || InPos == EDirection.Down ? DimRows() : DimCols());
+        return Random.Range(0, mi.StartingPosition == EDirection.Up || mi.StartingPosition == EDirection.Down ? mi.DimRows() : mi.DimCols());
     }
 
     // ----------------------------------------------------------------
@@ -63,10 +42,10 @@ public class Puzzle : MonoBehaviour
     {
         List<List<int>> res = new List<List<int>>();
 
-        int dC = DimCols();
-        int dR = DimRows();
-        int dCE = DimColsExtended();
-        int dRE = DimRowsExtended();
+        int dC = mi.DimCols();
+        int dR = mi.DimRows();
+        int dCE = mi.DimColsExtended();
+        int dRE = mi.DimRowsExtended();
 
         // Fill extended map with empty tiles
         for (int col = 0; col < dCE; col++)
@@ -83,12 +62,12 @@ public class Puzzle : MonoBehaviour
         {
             for (int row = 0; row < dR; row++)
             {
-                res[row + 1][col + 1] = mi.puzzleMap[row][col];
+                res[row + 1][col + 1] = mi.PuzzleMap[row][col];
             }
         }
 
         // Add tiles for in direction
-        switch (mi.InPos)
+        switch (mi.StartingPosition)
         {
             case EDirection.Up:
                 for (int i = 0; i < dC; i++)
@@ -116,19 +95,16 @@ public class Puzzle : MonoBehaviour
     }
 
     // ----------------------------------------------------------------
-    public void Generate(MapInf mi)
+    public void Generate(MapInfo mi)
     {
         List<List<int>> puzzleMap = PuzzleMapExtended(mi);
 
-        GenerateExended(puzzleMap);
+        GenerateExended(puzzleMap, mi.DimColsExtended(), mi.DimRowsExtended());
     }
 
     // ----------------------------------------------------------------
-    private void GenerateExended(List<List<int>> map)
+    private void GenerateExended(List<List<int>> map, int dCE, int dRE)
     {
-        int dCE = DimColsExtended();
-        int dRE = DimRowsExtended();
-
         for (int col = 0; col < dCE; col++)
         {
             for (int row = 0; row < dRE; row++)
@@ -158,70 +134,70 @@ public class Puzzle : MonoBehaviour
         }
     }
 
-    // ----------------------------------------------------------------
-    public Vector2 getDestination(ref int x, ref int y, EDirection d)
-    {
-        var destX = x;
-        var destY = y;
-        switch (d)
-        {
-            case EDirection.Up:
-                for (int i = y - 1; i >= 0; i--)
-                {
-                    if (puzzleMap[y - 1][x] == puzzleMap[i][x])
-                    {
-                        destY = i;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                break;
-            case EDirection.Right:
-                for (int i = x + 1; i < puzzleMap[y].Count; i++)
-                {
-                    if (puzzleMap[y][x + 1] == puzzleMap[y][i])
-                    {
-                        destX = i;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                break;
-            case EDirection.Down:
-                for (int i = y + 1; i < puzzleMap.Count; i++)
-                {
-                    if (puzzleMap[y + 1][x] == puzzleMap[i][x])
-                    {
-                        destY = i;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                break;
-            case EDirection.Left:
-                for (int i = x - 1; i >= 0; i--)
-                {
-                    if (puzzleMap[y][x - 1] == puzzleMap[y][i])
-                    {
-                        destX = i;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                break;
-        }
+    //// ----------------------------------------------------------------
+    //public Vector2 getDestination(ref int x, ref int y, EDirection d)
+    //{
+    //    var destX = x;
+    //    var destY = y;
+    //    switch (d)
+    //    {
+    //        case EDirection.Up:
+    //            for (int i = y - 1; i >= 0; i--)
+    //            {
+    //                if (puzzleMap[y - 1][x] == puzzleMap[i][x])
+    //                {
+    //                    destY = i;
+    //                }
+    //                else
+    //                {
+    //                    break;
+    //                }
+    //            }
+    //            break;
+    //        case EDirection.Right:
+    //            for (int i = x + 1; i < puzzleMap[y].Count; i++)
+    //            {
+    //                if (puzzleMap[y][x + 1] == puzzleMap[y][i])
+    //                {
+    //                    destX = i;
+    //                }
+    //                else
+    //                {
+    //                    break;
+    //                }
+    //            }
+    //            break;
+    //        case EDirection.Down:
+    //            for (int i = y + 1; i < puzzleMap.Count; i++)
+    //            {
+    //                if (puzzleMap[y + 1][x] == puzzleMap[i][x])
+    //                {
+    //                    destY = i;
+    //                }
+    //                else
+    //                {
+    //                    break;
+    //                }
+    //            }
+    //            break;
+    //        case EDirection.Left:
+    //            for (int i = x - 1; i >= 0; i--)
+    //            {
+    //                if (puzzleMap[y][x - 1] == puzzleMap[y][i])
+    //                {
+    //                    destX = i;
+    //                }
+    //                else
+    //                {
+    //                    break;
+    //                }
+    //            }
+    //            break;
+    //    }
 
-        x = destX;
-        y = destY;
+    //    x = destX;
+    //    y = destY;
 
-        return new Vector2(offsetX + x * TileSize, offsetY - y * TileSize);
-    }
+    //    return new Vector2(offsetX + x * TileSize, offsetY - y * TileSize);
+    //}
 }

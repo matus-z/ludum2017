@@ -9,9 +9,9 @@ public class Player : MonoBehaviour
 
     private Rigidbody2D RigidBody;
 
-    private bool moving;
+    private bool Moving;
 
-    private Vector2 destination;
+    private Vector2 Destination;
 
     // ----------------------------------------------------------------
     private void Start()
@@ -28,7 +28,7 @@ public class Player : MonoBehaviour
     // ----------------------------------------------------------------
     private void Update()
     {
-        if (moving)
+        if (Moving)
             return;
 
         bool isUp = Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W);
@@ -53,22 +53,22 @@ public class Player : MonoBehaviour
         //    destination = puzzle.getDestination(ref gridX, ref gridY, EDirection.Left);
         //}
 
-        moving = isUp || isDown || isLeft || isRight;
+        Moving = isUp || isDown || isLeft || isRight;
     }
 
     // ----------------------------------------------------------------
     private void FixedUpdate()
     {
-        if (!moving)
+        if (!Moving)
             return;
 
-        if (Vector2.Distance(RigidBody.position, destination) > 0.1f)
+        if (Vector2.Distance(RigidBody.position, Destination) > 0.1f)
         {
-            RigidBody.MovePosition(Vector2.MoveTowards(RigidBody.position, destination, MovementSpeed * Time.fixedDeltaTime));
+            RigidBody.MovePosition(Vector2.MoveTowards(RigidBody.position, Destination, MovementSpeed * Time.fixedDeltaTime));
         }
         else
         {
-            moving = false;
+            Moving = false;
         }
     }
 
