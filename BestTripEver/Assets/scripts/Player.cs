@@ -41,7 +41,6 @@ public class Player : MonoBehaviour
         float distance = (rb.position - destination).magnitude;
 
         MovementSpeed = MovementSpeedBase + distance * MovementSpeedMultiplier;
-        Debug.Log(MovementSpeed);
 
         MovementStart = rb.position;
         Destination = destination;
@@ -64,8 +63,8 @@ public class Player : MonoBehaviour
         {
             float movementSpeedAct = MovementSpeed;
             float c = Mathf.Abs(fractionToGoal - 0.5f);
-            if (c > 0.25f)
-                movementSpeedAct = (1.0f - 1.8f * c) * movementSpeedAct;
+            if(fractionToGoal < 0.5f)
+                movementSpeedAct = (1.0f - 1.95f * c) * movementSpeedAct;
 
             rb.MovePosition(Vector2.MoveTowards(rb.position, Destination, movementSpeedAct * Time.fixedDeltaTime));
         }
