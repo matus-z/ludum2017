@@ -89,6 +89,12 @@ public class GameController : MonoBehaviour
         if (PlayerController.Moving)
             return;
 
+        if (MovesAvailable <= 0 && PlayerController.Moving == false)
+        {
+            SetGameState(EGameState.GameOver);
+            return;
+        }
+
         MapInfo currentMap = Maps[CurrentMapIndex];
         if (currentMap.IsTileType(PlayerController.Pos, ETile.Out))
         {
@@ -122,12 +128,6 @@ public class GameController : MonoBehaviour
 
         if (madeMove)
             SetAvailableMoves(MovesAvailable - 1);
-
-        if (MovesAvailable <= 0)
-        {
-            SetGameState(EGameState.GameOver);
-            return;
-        }
     }
 
     // ----------------------------------------------------------------
