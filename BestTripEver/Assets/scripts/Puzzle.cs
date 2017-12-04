@@ -54,11 +54,13 @@ public class Puzzle : MonoBehaviour
             }
         }
 
-        foreach (var powerupPoint in mi.PowerupPoints) {
+        foreach (var powerupPoint in mi.PowerupPoints)
+        {
             GameObject tile = Instantiate(
                 PowerupPrefabs[powerupPoint.PowerupIndex],
                 new Vector3(OffsetX + powerupPoint.X * TileSize, OffsetY + powerupPoint.Y * TileSize, 0),
                 Quaternion.identity);
+
             tile.GetComponent<PowerupController>().powerupIndex = powerupPoint.PowerupIndex;
             tile.transform.SetParent(transform);
         }

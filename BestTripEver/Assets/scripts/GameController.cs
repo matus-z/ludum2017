@@ -51,7 +51,7 @@ public class GameController : MonoBehaviour
         // TODO Matus : init unlocked sins from where?
         UnlockSin(ESin.Lust);
         UnlockSin(ESin.Gluttony);
-        //UnlockSin(ESin.Greed);
+        UnlockSin(ESin.Greed);
         //UnlockSin(ESin.Sloth);
 
         InitPuzzle(CurrentMapIndex);
