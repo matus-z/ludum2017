@@ -23,7 +23,7 @@ public class GameController : MonoBehaviour
 
     private List<MapInfo> Maps;
 
-    private int CurrentMapIndex = 0;
+    public int CurrentMapIndex = 0;
 
     private EGameState GameState = EGameState.GamePlay;
 
