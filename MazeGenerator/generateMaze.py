@@ -79,7 +79,7 @@ while True:
                     values[startPoint[0]][startPoint[1] - i] = color
                     positions.remove((startPoint[0], startPoint[1] - i))
 
-    ppsrint(values)
+    pprint(values)
 
     #define the colormar
     X = np.array([

@@ -18,6 +18,13 @@ public class GameController : MonoBehaviour
     private bool GameOver = true;
 
     private Dictionary<ESin, int> SinsScore;
+    
+    private bool DoorOpened = false;
+
+    public List<ESin> UnlockedSins;
+
+    public delegate void del_onDoorOpened();
+    public del_onDoorOpened Event_onDoorOpened;
 
     // ----------------------------------------------------------------
     private void Start()
@@ -62,6 +69,7 @@ public class GameController : MonoBehaviour
         MapInfo currentMap = Maps[CurrentMapIndex];
         if (currentMap.IsTileType(PlayerController.Pos, ETile.Out))
         {
+            DoorOpened = false;
             InitPuzzle(CurrentMapIndex + 1);
             return;
         }
@@ -71,7 +79,7 @@ public class GameController : MonoBehaviour
             return;
 
         PositionOnGrid newPos = new PositionOnGrid(PlayerController.Pos.X, PlayerController.Pos.Y);
-        Vector2 destination = PuzzleController.GetDestination(currentMap, ref newPos, dir);
+        Vector2 destination = PuzzleController.GetDestination(currentMap, ref newPos, dir, DoorOpened);
 
         ESin? newSin = currentMap.GetSin(newPos);
 
@@ -152,6 +160,23 @@ public class GameController : MonoBehaviour
         PuzzleController.ClearBoard();
         PuzzleController.Generate(currentMap, zeroX, zeroY);
         PlayerController.Init(playerPos);
+    }
+
+    public void PowerupPickedUp() {
+        if (Event_onDoorOpened != null) {
+            Event_onDoorOpened();
+        }
+        DoorOpened = true;
+    }
+
+    public void SinPickedUp(int sinIndex)
+    {
+        UnlockedSins.Add((ESin)sinIndex);
+        if (Event_onDoorOpened != null)
+        {
+        Event_onDoorOpened();
+        }
+        DoorOpened = true;
     }
 
     // ----------------------------------------------------------------
