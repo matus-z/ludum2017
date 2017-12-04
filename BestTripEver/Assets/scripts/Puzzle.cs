@@ -70,7 +70,7 @@ public class Puzzle : MonoBehaviour
     public void ClearBoard()
     {
         foreach (Transform child in transform)
-            GameObject.Destroy(child.gameObject);
+            Destroy(child.gameObject);
     }
 
     // ----------------------------------------------------------------

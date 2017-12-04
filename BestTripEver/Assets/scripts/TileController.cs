@@ -10,10 +10,12 @@ public class TileController : MonoBehaviour
 
     private GameController gc;
 
-    void Start() {
+    void Start()
+    {
         gc = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.5f, 0.5f);
-        if (sinIndex > 0 && gc.UnlockedSins.IndexOf((ESin)sinIndex) == -1) {
+        if (sinIndex > 0 && gc.UnlockedSins.IndexOf((ESin)sinIndex) == -1)
+        {
             unlockingSin = true;
             GetComponent<SpriteRenderer>().color = new Color(1, 0, 0);
         }
@@ -23,7 +25,8 @@ public class TileController : MonoBehaviour
     {
         if (other.tag == "Player" && !touched)
         {
-            if (unlockingSin) {
+            if (unlockingSin)
+            {
                 // TOOD: show UI with text using sinIndex
                 gc.SinPickedUp(sinIndex);
             }
