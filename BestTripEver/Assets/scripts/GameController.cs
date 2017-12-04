@@ -10,9 +10,6 @@ public class GameController : MonoBehaviour
     private Puzzle PuzzleController;
     private Player PlayerController;
 
-    private float ZeroX = 0;
-    private float ZeroY = 0;
-
     private List<MapInfo> Maps;
 
     private int CurrentMapIndex = 0;
@@ -126,13 +123,18 @@ public class GameController : MonoBehaviour
 
         currentMap.DebugLog();
 
-        ZeroX = PlayerController.transform.position.x;
-        ZeroY = PlayerController.transform.position.y;
+        PositionOnGrid playerPos = currentMap.PlayerStartingPosRand();
+
+        Rigidbody2D playerRb = PlayerController.GetComponent<Rigidbody2D>();
+        if (playerRb == null)
+            return;
+
+        float zeroX = playerRb.transform.position.x - ((float)playerPos.X) * PuzzleController.TileSize;
+        float zeroY = playerRb.transform.position.y - ((float)playerPos.Y) * PuzzleController.TileSize;
 
         PuzzleController.ClearBoard();
-        PuzzleController.Generate(currentMap, ZeroX, ZeroY);
-        PositionOnGrid playerPos = PuzzleController.PlayerStartingPosRand(currentMap);
-        PlayerController.Init(playerPos, ZeroX, ZeroY, PuzzleController.TileSize, UnlockedSins);
+        PuzzleController.Generate(currentMap, zeroX, zeroY);
+        PlayerController.Init(playerPos, UnlockedSins);
     }
 
     public void PowerupPickedUp() {
@@ -156,6 +158,6 @@ public class GameController : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawSphere(new Vector3(ZeroX, ZeroY, 0.0f), 0.3f);
+        Gizmos.DrawSphere(PlayerGO.transform.position, 0.3f);
     }
 }

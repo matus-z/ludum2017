@@ -25,12 +25,11 @@ public class Player : MonoBehaviour
     }
 
     // ----------------------------------------------------------------
-    public void Init(PositionOnGrid pos, float offsetX, float offsetY, float tileSize, List<ESin> unlockedSins)
+    public void Init(PositionOnGrid pos, List<ESin> unlockedSins)
     {
         Pos = pos;
 
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        rb.position = new Vector3(offsetX + Pos.X * tileSize, offsetY + Pos.Y * tileSize, 0.0f);
         Destination = rb.position;
 
         Moving = false;
@@ -48,7 +47,7 @@ public class Player : MonoBehaviour
         }
 
         // TODO Matus : remove
-        Debug.Log(Score.Count);
+        //Debug.Log("Unlocked score categories: " + Score.Count);
     }
 
     // ----------------------------------------------------------------
