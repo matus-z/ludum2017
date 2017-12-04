@@ -108,9 +108,9 @@ public class Puzzle : MonoBehaviour
         // If out, move only if door opened
         if (mi.IsTileType(nextPos, ETile.Out))
         {
-            if (doorOpened) {
+            if (doorOpened)
                 newPos = nextPos;
-            }
+            return GetDestinationFromTile(newPos);
         }
 
         // Else inside map - move through all tiles with the same color
