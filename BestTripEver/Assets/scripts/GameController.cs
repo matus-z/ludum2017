@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 // ----------------------------------------------------------------
@@ -16,7 +17,7 @@ public class GameController : MonoBehaviour
 
     private bool GameOver = true;
 
-    private List<ESin> UnlockedSins;
+    private Dictionary<ESin, int> SinsScore;
 
     // ----------------------------------------------------------------
     private void Start()
@@ -38,10 +39,13 @@ public class GameController : MonoBehaviour
         if (Maps.Count <= 0)
             return;
 
-        UnlockedSins = new List<ESin>();
+        SinsScore = new Dictionary<ESin, int>();
 
         // TODO Matus : init unlocked sins from where?
-        UnlockedSins.Add(ESin.Lust);
+        UnlockSin(ESin.Lust);
+        UnlockSin(ESin.Gluttony);
+        //UnlockSin(ESin.Greed);
+        //UnlockSin(ESin.Sloth);
 
         InitPuzzle(CurrentMapIndex);
     }
@@ -66,8 +70,27 @@ public class GameController : MonoBehaviour
         if (dir == EDirection.No)
             return;
 
-        Vector2 destination = PuzzleController.GetDestination(currentMap, ref PlayerController.Pos, dir);
+        PositionOnGrid newPos = new PositionOnGrid(PlayerController.Pos.X, PlayerController.Pos.Y);
+        Vector2 destination = PuzzleController.GetDestination(currentMap, ref newPos, dir);
+
+        ESin? newSin = currentMap.GetSin(newPos);
+
+        // If not moving to a board pos, move without penalization
+        if (newSin.HasValue == false)
+        {
+            PlayerController.Pos = newPos;
+            PlayerController.MoveTo(destination);
+            return;
+        }
+
+        // If trying to move to a locked board pos, return
+        if (IsSinUnlocked(newSin.Value) == false)
+            return;
+
+        // Else move to an unlocked board pos and increase sin score
+        PlayerController.Pos = newPos;
         PlayerController.MoveTo(destination);
+        IncreaseSinsScore(newSin.Value);
     }
 
     // ----------------------------------------------------------------
@@ -123,12 +146,12 @@ public class GameController : MonoBehaviour
         if (playerRb == null)
             return;
 
-        float zeroX = playerRb.transform.position.x - ((float)playerPos.X) * PuzzleController.TileSize;
-        float zeroY = playerRb.transform.position.y - ((float)playerPos.Y) * PuzzleController.TileSize;
+        float zeroX = playerRb.transform.position.x - playerPos.X * PuzzleController.TileSize;
+        float zeroY = playerRb.transform.position.y - playerPos.Y * PuzzleController.TileSize;
 
         PuzzleController.ClearBoard();
         PuzzleController.Generate(currentMap, zeroX, zeroY);
-        PlayerController.Init(playerPos, UnlockedSins);
+        PlayerController.Init(playerPos);
     }
 
     // ----------------------------------------------------------------
@@ -136,5 +159,34 @@ public class GameController : MonoBehaviour
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawSphere(PlayerGO.transform.position, 0.3f);
+    }
+
+    // ----------------------------------------------------------------
+    private void UnlockSin(ESin sin)
+    {
+        SinsScore.Add(sin, 0);
+    }
+
+    // ----------------------------------------------------------------
+    private bool IsSinUnlocked(ESin sin)
+    {
+        return SinsScore.ContainsKey(sin);
+    }
+
+    // ----------------------------------------------------------------
+    private void IncreaseSinsScore(ESin sin)
+    {
+        SinsScore[sin] += 1;
+        DebugLogScore();
+    }
+
+    // ----------------------------------------------------------------
+    private void DebugLogScore()
+    {
+        String str = "SinScore:";
+        foreach (var sin in SinsScore)
+            str += " " + sin.Key + " " + sin.Value;
+
+        Debug.Log(str);
     }
 }

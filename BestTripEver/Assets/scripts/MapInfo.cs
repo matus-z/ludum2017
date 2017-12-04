@@ -113,6 +113,15 @@ public class MapInfo
     }
 
     // ----------------------------------------------------------------
+    public ESin? GetSin(PositionOnGrid p)
+    {
+        if (PuzzleMapExtended[p.Y][p.X] < 0)
+            return null;
+
+        return (ESin)(PuzzleMapExtended[p.Y][p.X]);
+    }
+
+    // ----------------------------------------------------------------
     public void DebugLog()
     {
         Debug.Log("Map: [r,x]=[" + DimRows() + "," + DimCols() + "] Ends[" + EndingPoints.Count + "] Poweups[" + PowerupPoints.Count + "] Sins[" + SinPoints.Count + "] Start[" + StartingPosition + "]");

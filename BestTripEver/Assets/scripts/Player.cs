@@ -15,17 +15,14 @@ public class Player : MonoBehaviour
 
     public PositionOnGrid Pos;
 
-    private Dictionary<ESin, int> Score;
-
     // ----------------------------------------------------------------
     private void Start()
     {
         Moving = false;
-        Score = new Dictionary<ESin, int>();
     }
 
     // ----------------------------------------------------------------
-    public void Init(PositionOnGrid pos, List<ESin> unlockedSins)
+    public void Init(PositionOnGrid pos)
     {
         Pos = pos;
 
@@ -33,17 +30,6 @@ public class Player : MonoBehaviour
         Destination = rb.position;
 
         Moving = false;
-
-        foreach (ESin sin in unlockedSins)
-        {
-            if (Score.ContainsKey(sin))
-                continue;
-
-            Score.Add(sin, 0);
-        }
-
-        // TODO Matus : remove
-        //Debug.Log("Unlocked score categories: " + Score.Count);
     }
 
     // ----------------------------------------------------------------
