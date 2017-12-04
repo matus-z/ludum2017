@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
     // ----------------------------------------------------------------
     private void Start()
     {
-        Moving = false;
+        SetMoving(false);
     }
 
     // ----------------------------------------------------------------
@@ -31,7 +31,7 @@ public class Player : MonoBehaviour
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         Destination = rb.position;
 
-        Moving = false;
+        SetMoving(false);
     }
 
     // ----------------------------------------------------------------
@@ -44,12 +44,14 @@ public class Player : MonoBehaviour
 
         MovementStart = rb.position;
         Destination = destination;
-        Moving = true;
+        SetMoving(true);
     }
 
     // ----------------------------------------------------------------
     private void FixedUpdate()
     {
+        SolveAnimations();
+
         if (!Moving)
             return;
 
@@ -63,14 +65,48 @@ public class Player : MonoBehaviour
         {
             float movementSpeedAct = MovementSpeed;
             float c = Mathf.Abs(fractionToGoal - 0.5f);
-            if(fractionToGoal < 0.5f)
+            if (fractionToGoal < 0.5f)
                 movementSpeedAct = (1.0f - 1.95f * c) * movementSpeedAct;
+
+            movementSpeedAct /= 10;
 
             rb.MovePosition(Vector2.MoveTowards(rb.position, Destination, movementSpeedAct * Time.fixedDeltaTime));
         }
         else
         {
-            Moving = false;
+            SetMoving(false);
         }
+    }
+
+    // ----------------------------------------------------------------
+    private void SetMoving(bool moving)
+    {
+        Moving = moving;
+        SolveAnimations();
+    }
+
+    // ----------------------------------------------------------------
+    private void SolveAnimations()
+    {
+        Animator anim = gameObject.GetComponent<Animator>();
+        if (anim == null)
+            return;
+
+        if (!Moving)
+        {
+            anim.Play("Idle");
+            return;
+        }
+
+        Vector2 startToDestination = MovementStart - Destination;
+
+        if (startToDestination.x > 0)
+            anim.Play("MoveRight");
+        else if (startToDestination.x < 0)
+            anim.Play("MoveLeft");
+        else if (startToDestination.y < 0)
+            anim.Play("MoveUp");
+        else if (startToDestination.y > 0)
+            anim.Play("MoveDown");
     }
 }
