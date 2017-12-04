@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System;
+using System.Linq;
 using UnityEngine;
 
 // ----------------------------------------------------------------
@@ -18,6 +19,7 @@ public class GameController : MonoBehaviour
     private bool GameOver = true;
 
     public Dictionary<ESin, int> SinsScore { get; private set; }
+    private int MovesAvailable = 0;
 
     private bool DoorOpened = false;
 
@@ -46,11 +48,9 @@ public class GameController : MonoBehaviour
 
         SinsScore = new Dictionary<ESin, int>();
 
-        // TODO Matus : init unlocked sins from where?
-        UnlockNextSin();
-        UnlockNextSin();
-
         InitPuzzle(CurrentMapIndex);
+
+        MovesAvailable = 20;
     }
 
     // ----------------------------------------------------------------
@@ -77,7 +77,9 @@ public class GameController : MonoBehaviour
         PositionOnGrid newPos = new PositionOnGrid(PlayerController.Pos.X, PlayerController.Pos.Y);
         Vector2 destination = PuzzleController.GetDestination(currentMap, ref newPos, dir, DoorOpened);
 
-        ESin? newSin = currentMap.GetSin(newPos);
+        bool madeMove = newPos.X != PlayerController.Pos.X || newPos.Y != PlayerController.Pos.Y;
+
+        ESin ? newSin = currentMap.GetSin(newPos);
 
         // If not moving to a board pos, move without penalization
         if (newSin.HasValue == false)
@@ -88,13 +90,27 @@ public class GameController : MonoBehaviour
         }
 
         // If trying to move to a locked board pos, return
-        if (IsSinUnlocked(newSin.Value) == false)
-            return;
+        //if (IsSinUnlocked(newSin.Value) == false)
+        //    return;
 
         // Else move to an unlocked board pos and increase sin score
         PlayerController.Pos = newPos;
         PlayerController.MoveTo(destination);
-        IncreaseSinsScore(newSin.Value);
+
+        if (madeMove)
+        {
+            MovesAvailable -= 1;
+            Debug.Log("MovesAvailable : " + MovesAvailable);
+        }
+
+        if (MovesAvailable <= 0)
+        {
+            // TODO Matus : Game Over screen
+            GameOver = true;
+            return;
+        }
+
+        //IncreaseSinsScore(newSin.Value);
     }
 
     // ----------------------------------------------------------------
@@ -159,8 +175,9 @@ public class GameController : MonoBehaviour
     }
 
     // ----------------------------------------------------------------
-    public void PowerupPickedUp()
+    public void PowerupPickedUp(int movesAdded)
     {
+        MovesAvailable += movesAdded;
         if (Event_onDoorOpened != null)
         {
             Event_onDoorOpened();
@@ -195,25 +212,19 @@ public class GameController : MonoBehaviour
         SinsScore.Add(sin, 0);
     }
 
-    // ----------------------------------------------------------------
-    private void UnlockNextSin()
-    {
-        int nsi = SinsScore.Count;
-        UnlockSin((ESin)nsi);
-    }
+    //// ----------------------------------------------------------------
+    //private bool IsSinUnlocked(ESin sin)
+    //{
+    //    return SinsScore.ContainsKey(sin);
+    //}
 
-    // ----------------------------------------------------------------
-    private bool IsSinUnlocked(ESin sin)
-    {
-        return SinsScore.ContainsKey(sin);
-    }
-
-    // ----------------------------------------------------------------
-    private void IncreaseSinsScore(ESin sin)
-    {
-        SinsScore[sin] += 1;
-        DebugLogScore();
-    }
+    //// ----------------------------------------------------------------
+    //private void IncreaseSinsScore(ESin sin)
+    //{
+    //    UnlockSin(sin);
+    //    SinsScore[sin] += 1;
+    //    DebugLogScore();
+    //}
 
     // ----------------------------------------------------------------
     private void DebugLogScore()
@@ -221,6 +232,9 @@ public class GameController : MonoBehaviour
         String str = "SinScore:";
         foreach (var sin in SinsScore)
             str += " " + sin.Key + " " + sin.Value;
+
+        int totalScore = SinsScore.Sum(x => x.Value);
+        str += " Total: " + totalScore;
 
         Debug.Log(str);
     }
