@@ -99,7 +99,7 @@ public class GameController : MonoBehaviour
         if (madeMove)
         {
             MovesAvailable -= 1;
-            Debug.Log("MovesAvailable : " + MovesAvailable);
+            //Debug.Log("MovesAvailable : " + MovesAvailable);
         }
 
         if (MovesAvailable <= 0)
