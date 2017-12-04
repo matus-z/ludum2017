@@ -83,7 +83,6 @@ public class Puzzle : MonoBehaviour
                 new Vector3(OffsetX + powerupPoint.X * TileSize, OffsetY + powerupPoint.Y * TileSize, 0),
                 Quaternion.identity);
 
-            tile.GetComponent<PowerupController>().powerupIndex = powerupPoint.PowerupIndex;
             tile.transform.SetParent(transform);
         }
 

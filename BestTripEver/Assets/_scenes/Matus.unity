@@ -278,10 +278,12 @@ MonoBehaviour:
   PuzzleGO: {fileID: 479511517}
   PlayerGO: {fileID: 1179376309}
   UITextAvailableMoves: {fileID: 1641061433}
+  UITextMessage: {fileID: 760063411}
   UICanvasGameplay: {fileID: 977420398}
   UICanvasMessage: {fileID: 1122181411}
   UICanvasGameover: {fileID: 1605260228}
   MovesAvailable: 20
+  CurrentMapIndex: 0
 --- !u!4 &612666405
 Transform:
   m_ObjectHideFlags: 0
@@ -297,6 +299,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &760063411 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1285880361649444, guid: 7c251a466fb570a46afda3ff75cb028f,
+    type: 2}
+  m_PrefabInternal: {fileID: 798917900}
 --- !u!1001 &798917900
 Prefab:
   m_ObjectHideFlags: 0

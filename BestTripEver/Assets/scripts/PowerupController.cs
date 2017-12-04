@@ -12,7 +12,7 @@ public class PowerupController : MonoBehaviour
         if (other.tag == "Player")
         {
             // TODO: Show UI with text using powerupIndex
-            GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>().PowerupPickedUp(MovesAdded);
+            GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>().PowerupPickedUp(powerupIndex, MovesAdded);
             Destroy(gameObject);
         }
     }

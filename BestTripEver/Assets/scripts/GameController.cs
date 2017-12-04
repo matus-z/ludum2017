@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 // ----------------------------------------------------------------
 public class GameController : MonoBehaviour
@@ -11,6 +12,7 @@ public class GameController : MonoBehaviour
     public GameObject PlayerGO;
 
     public GameObject UITextAvailableMoves;
+    public GameObject UITextMessage;
 
     public GameObject UICanvasGameplay;
     public GameObject UICanvasMessage;
@@ -36,6 +38,8 @@ public class GameController : MonoBehaviour
 
     public delegate void del_onDoorOpened();
     public del_onDoorOpened Event_onDoorOpened;
+
+    private Messages Msgs;
 
     // ----------------------------------------------------------------
     private void Start()
@@ -63,6 +67,8 @@ public class GameController : MonoBehaviour
         StartGameMoves = MovesAvailable;
 
         InitPuzzle(CurrentMapIndex);
+
+        Msgs = new Messages();
     }
 
     // ----------------------------------------------------------------
@@ -133,10 +139,12 @@ public class GameController : MonoBehaviour
 
         if (isGameRestart)
         {
-            SetAvailableMoves(StartGameMoves);
-            InitPuzzle(0);
-            SetGameState(EGameState.GamePlay);
-            return true;
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
+
+            //SetAvailableMoves(StartGameMoves);
+            //InitPuzzle(0);
+            //SetGameState(EGameState.GamePlay);
+            //return true;
         }
         if (isLevelRestart)
         {
@@ -210,7 +218,7 @@ public class GameController : MonoBehaviour
     }
 
     // ----------------------------------------------------------------
-    public void PowerupPickedUp(int movesAdded)
+    public void PowerupPickedUp(int powerupIndex, int movesAdded)
     {
         SetGameState(EGameState.Message);
 
@@ -220,6 +228,8 @@ public class GameController : MonoBehaviour
             Event_onDoorOpened();
         }
         DoorOpened = true;
+
+        UITextMessage.GetComponent<Text>().text = Msgs.GetMessage(powerupIndex + 1);
     }
 
     // ----------------------------------------------------------------
