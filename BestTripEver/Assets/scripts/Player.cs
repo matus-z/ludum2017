@@ -30,10 +30,6 @@ public class Player : MonoBehaviour
         Destination = rb.position;
 
         Moving = false;
-        if (Score == null) {
-            Score = new Dictionary<ESin, int>();
-        }
-
     }
 
     // ----------------------------------------------------------------

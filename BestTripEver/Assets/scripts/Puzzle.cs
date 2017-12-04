@@ -101,8 +101,8 @@ public class Puzzle : MonoBehaviour
         // If in, move just one tile
         if (mi.IsTileType(nextPos, ETile.In))
         {
-            playerPos = nextPos;
-            return GetDestinationFromTile(playerPos);
+            newPos = nextPos;
+            return GetDestinationFromTile(newPos);
         }
 
         // If out, move only if door opened
