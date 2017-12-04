@@ -17,11 +17,9 @@ public class GameController : MonoBehaviour
 
     private bool GameOver = true;
 
-    private Dictionary<ESin, int> SinsScore;
-    
-    private bool DoorOpened = false;
+    public Dictionary<ESin, int> SinsScore { get; private set; }
 
-    public List<ESin> UnlockedSins;
+    private bool DoorOpened = false;
 
     public delegate void del_onDoorOpened();
     public del_onDoorOpened Event_onDoorOpened;
@@ -49,10 +47,8 @@ public class GameController : MonoBehaviour
         SinsScore = new Dictionary<ESin, int>();
 
         // TODO Matus : init unlocked sins from where?
-        UnlockSin(ESin.Lust);
-        UnlockSin(ESin.Gluttony);
-        UnlockSin(ESin.Greed);
-        //UnlockSin(ESin.Sloth);
+        UnlockNextSin();
+        UnlockNextSin();
 
         InitPuzzle(CurrentMapIndex);
     }
@@ -162,19 +158,23 @@ public class GameController : MonoBehaviour
         PlayerController.Init(playerPos);
     }
 
-    public void PowerupPickedUp() {
-        if (Event_onDoorOpened != null) {
+    // ----------------------------------------------------------------
+    public void PowerupPickedUp()
+    {
+        if (Event_onDoorOpened != null)
+        {
             Event_onDoorOpened();
         }
         DoorOpened = true;
     }
 
+    // ----------------------------------------------------------------
     public void SinPickedUp(int sinIndex)
     {
-        UnlockedSins.Add((ESin)sinIndex);
+        UnlockSin((ESin)sinIndex);
         if (Event_onDoorOpened != null)
         {
-        Event_onDoorOpened();
+            Event_onDoorOpened();
         }
         DoorOpened = true;
     }
@@ -189,7 +189,17 @@ public class GameController : MonoBehaviour
     // ----------------------------------------------------------------
     private void UnlockSin(ESin sin)
     {
+        if (SinsScore.ContainsKey(sin))
+            return;
+
         SinsScore.Add(sin, 0);
+    }
+
+    // ----------------------------------------------------------------
+    private void UnlockNextSin()
+    {
+        int nsi = SinsScore.Count;
+        UnlockSin((ESin)nsi);
     }
 
     // ----------------------------------------------------------------
