@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System;
+using System.Linq;
 using UnityEngine;
 
 // ----------------------------------------------------------------
@@ -6,6 +8,8 @@ public class GameController : MonoBehaviour
 {
     public GameObject PuzzleGO;
     public GameObject PlayerGO;
+
+    public int MovesAvailable = 0;
 
     private Puzzle PuzzleController;
     private Player PlayerController;
@@ -16,9 +20,9 @@ public class GameController : MonoBehaviour
 
     private bool GameOver = true;
 
-    private bool DoorOpened = false;
+    private Dictionary<ESin, int> SinsScore;
 
-    public List<ESin> UnlockedSins;
+    private bool DoorOpened = false;
 
     public delegate void del_onDoorOpened();
     public del_onDoorOpened Event_onDoorOpened;
@@ -43,10 +47,7 @@ public class GameController : MonoBehaviour
         if (Maps.Count <= 0)
             return;
 
-        UnlockedSins = new List<ESin>();
-
-        // TODO Matus : init unlocked sins from where?
-        UnlockedSins.Add(ESin.Lust);
+        SinsScore = new Dictionary<ESin, int>();
 
         InitPuzzle(CurrentMapIndex);
     }
@@ -72,8 +73,43 @@ public class GameController : MonoBehaviour
         if (dir == EDirection.No)
             return;
 
-        Vector2 destination = PuzzleController.GetDestination(currentMap, ref PlayerController.Pos, dir, DoorOpened);
+        PositionOnGrid newPos = new PositionOnGrid(PlayerController.Pos.X, PlayerController.Pos.Y);
+        Vector2 destination = PuzzleController.GetDestination(currentMap, ref newPos, dir, DoorOpened);
+
+        bool madeMove = newPos.X != PlayerController.Pos.X || newPos.Y != PlayerController.Pos.Y;
+
+        ESin ? newSin = currentMap.GetSin(newPos);
+
+        // If not moving to a board pos, move without penalization
+        if (newSin.HasValue == false)
+        {
+            PlayerController.Pos = newPos;
+            PlayerController.MoveTo(destination);
+            return;
+        }
+
+        // If trying to move to a locked board pos, return
+        //if (IsSinUnlocked(newSin.Value) == false)
+        //    return;
+
+        // Else move to an unlocked board pos and increase sin score
+        PlayerController.Pos = newPos;
         PlayerController.MoveTo(destination);
+
+        if (madeMove)
+        {
+            MovesAvailable -= 1;
+            Debug.Log("MovesAvailable : " + MovesAvailable);
+        }
+
+        if (MovesAvailable <= 0)
+        {
+            // TODO Matus : Game Over screen
+            GameOver = true;
+            return;
+        }
+
+        //IncreaseSinsScore(newSin.Value);
     }
 
     // ----------------------------------------------------------------
@@ -129,27 +165,32 @@ public class GameController : MonoBehaviour
         if (playerRb == null)
             return;
 
-        float zeroX = playerRb.transform.position.x - ((float)playerPos.X) * PuzzleController.TileSize;
-        float zeroY = playerRb.transform.position.y - ((float)playerPos.Y) * PuzzleController.TileSize;
+        float zeroX = playerRb.transform.position.x - playerPos.X * PuzzleController.TileSize;
+        float zeroY = playerRb.transform.position.y - playerPos.Y * PuzzleController.TileSize;
 
         PuzzleController.ClearBoard();
         PuzzleController.Generate(currentMap, zeroX, zeroY);
-        PlayerController.Init(playerPos, UnlockedSins);
+        PlayerController.Init(playerPos);
     }
 
-    public void PowerupPickedUp() {
-        if (Event_onDoorOpened != null) {
+    // ----------------------------------------------------------------
+    public void PowerupPickedUp(int movesAdded)
+    {
+        MovesAvailable += movesAdded;
+        if (Event_onDoorOpened != null)
+        {
             Event_onDoorOpened();
         }
         DoorOpened = true;
     }
 
+    // ----------------------------------------------------------------
     public void SinPickedUp(int sinIndex)
     {
-        UnlockedSins.Add((ESin)sinIndex);
+        UnlockSin((ESin)sinIndex);
         if (Event_onDoorOpened != null)
         {
-        Event_onDoorOpened();
+            Event_onDoorOpened();
         }
         DoorOpened = true;
     }
@@ -159,5 +200,41 @@ public class GameController : MonoBehaviour
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawSphere(PlayerGO.transform.position, 0.3f);
+    }
+
+    // ----------------------------------------------------------------
+    private void UnlockSin(ESin sin)
+    {
+        if (SinsScore.ContainsKey(sin))
+            return;
+
+        SinsScore.Add(sin, 0);
+    }
+
+    // ----------------------------------------------------------------
+    public bool IsSinUnlocked(ESin sin)
+    {
+        return SinsScore.ContainsKey(sin);
+    }
+
+    //// ----------------------------------------------------------------
+    //private void IncreaseSinsScore(ESin sin)
+    //{
+    //    UnlockSin(sin);
+    //    SinsScore[sin] += 1;
+    //    DebugLogScore();
+    //}
+
+    // ----------------------------------------------------------------
+    private void DebugLogScore()
+    {
+        String str = "SinScore:";
+        foreach (var sin in SinsScore)
+            str += " " + sin.Key + " " + sin.Value;
+
+        int totalScore = SinsScore.Sum(x => x.Value);
+        str += " Total: " + totalScore;
+
+        Debug.Log(str);
     }
 }

@@ -73,6 +73,7 @@ public class Puzzle : MonoBehaviour
                 PowerupPrefabs[powerupPoint.PowerupIndex],
                 new Vector3(OffsetX + powerupPoint.X * TileSize, OffsetY + powerupPoint.Y * TileSize, 0),
                 Quaternion.identity);
+
             tile.GetComponent<PowerupController>().powerupIndex = powerupPoint.PowerupIndex;
             tile.transform.SetParent(transform);
         }
@@ -280,7 +281,7 @@ public class Puzzle : MonoBehaviour
     public void ClearBoard()
     {
         foreach (Transform child in transform)
-            GameObject.Destroy(child.gameObject);
+            Destroy(child.gameObject);
     }
 
     // ----------------------------------------------------------------
@@ -290,40 +291,39 @@ public class Puzzle : MonoBehaviour
     }
 
     // ----------------------------------------------------------------
-    public Vector2 GetDestination(MapInfo mi, ref PositionOnGrid playerPos, EDirection d, bool doorOpened)
+    public Vector2 GetDestination(MapInfo mi, ref PositionOnGrid newPos, EDirection d, bool doorOpened)
     {
-        int x = playerPos.X;
-        int y = playerPos.Y;
+        int x = newPos.X;
+        int y = newPos.Y;
 
-        int destX = playerPos.X;
-        int destY = playerPos.Y;
+        int destX = newPos.X;
+        int destY = newPos.Y;
 
         List<List<int>> map = mi.PuzzleMapExtended;
 
-        PositionOnGrid nextPos = playerPos.NextPos(d);
+        PositionOnGrid nextPos = newPos.NextPos(d);
 
         // Ca not move if undef or void
         if (false == mi.IsDefined(nextPos) || mi.IsTileType(nextPos, ETile.Void))
-            return GetDestinationFromTile(playerPos);
+            return GetDestinationFromTile(newPos);
 
         // Can not move from board back to in tile
-        if (mi.IsTileType(playerPos, ETile.In) == false && mi.IsTileType(nextPos, ETile.In))
-            return GetDestinationFromTile(playerPos);
+        if (mi.IsTileType(newPos, ETile.In) == false && mi.IsTileType(nextPos, ETile.In))
+            return GetDestinationFromTile(newPos);
 
         // If in, move just one tile
         if (mi.IsTileType(nextPos, ETile.In))
         {
-            playerPos = nextPos;
-            return GetDestinationFromTile(playerPos);
+            newPos = nextPos;
+            return GetDestinationFromTile(newPos);
         }
 
         // If out, move only if door opened
         if (mi.IsTileType(nextPos, ETile.Out))
         {
-            if (doorOpened) {
-                playerPos = nextPos;
-            }
-            return GetDestinationFromTile(playerPos);
+            if (doorOpened)
+                newPos = nextPos;
+            return GetDestinationFromTile(newPos);
         }
 
         // Else inside map - move through all tiles with the same color
@@ -383,9 +383,9 @@ public class Puzzle : MonoBehaviour
                 break;
         }
 
-        playerPos.X = destX;
-        playerPos.Y = destY;
+        newPos.X = destX;
+        newPos.Y = destY;
 
-        return GetDestinationFromTile(playerPos);
+        return GetDestinationFromTile(newPos);
     }
 }
