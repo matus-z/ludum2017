@@ -27,7 +27,7 @@ public class GameController : MonoBehaviour
 
     public int CurrentMapIndex = 0;
 
-    private EGameState GameState = EGameState.GamePlay;
+    private EGameState GameState = EGameState.Message;
 
     private Dictionary<ESin, int> SinsScore;
 
@@ -69,6 +69,10 @@ public class GameController : MonoBehaviour
         InitPuzzle(CurrentMapIndex);
 
         Msgs = new Messages();
+
+        // Init message screen
+        UITextMessage.GetComponent<Text>().text = Msgs.GetMessage(0);
+        SetGameState(EGameState.Message);
     }
 
     // ----------------------------------------------------------------

@@ -283,7 +283,7 @@ MonoBehaviour:
   UICanvasMessage: {fileID: 1122181411}
   UICanvasGameover: {fileID: 1605260228}
   MovesAvailable: 20
-  CurrentMapIndex: 18
+  CurrentMapIndex: 1
 --- !u!4 &612666405
 Transform:
   m_ObjectHideFlags: 0

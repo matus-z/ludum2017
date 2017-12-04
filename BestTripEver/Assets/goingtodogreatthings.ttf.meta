@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 34284d9f6e125494ebcdc9db30442d07
+timeCreated: 1512423451
+licenseType: Free
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: goingtodogreatthings
+  fontNames:
+  - goingtodogreatthings
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
