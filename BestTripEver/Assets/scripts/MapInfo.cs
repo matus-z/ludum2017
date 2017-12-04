@@ -117,4 +117,22 @@ public class MapInfo
     {
         Debug.Log("Map: [r,x]=[" + DimRows() + "," + DimCols() + "] Ends[" + EndingPoints.Count + "] Poweups[" + PowerupPoints.Count + "] Sins[" + SinPoints.Count + "] Start[" + StartingPosition + "]");
     }
+
+    // ----------------------------------------------------------------
+    public PositionOnGrid PlayerStartingPosRand()
+    {
+        switch (StartingPosition)
+        {
+            case EDirection.Up:
+                return new PositionOnGrid(Random.Range(0, DimCols()) + 1, DimRowsExtended() - 1);
+            case EDirection.Down:
+                return new PositionOnGrid(Random.Range(0, DimCols()) + 1, 0);
+            case EDirection.Left:
+                return new PositionOnGrid(0, Random.Range(0, DimRows()) + 1);
+            case EDirection.Right:
+                return new PositionOnGrid(DimColsExtended() - 1, Random.Range(0, DimRows()) + 1);
+        }
+
+        return new PositionOnGrid(0, 0);
+    }
 }

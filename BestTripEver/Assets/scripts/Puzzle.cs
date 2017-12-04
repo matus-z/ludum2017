@@ -15,24 +15,6 @@ public class Puzzle : MonoBehaviour
     public float TileSize = 4.21f;
 
     // ----------------------------------------------------------------
-    public PositionOnGrid PlayerStartingPosRand(MapInfo mi)
-    {
-        switch(mi.StartingPosition)
-        {
-            case EDirection.Up:
-                return new PositionOnGrid(Random.Range(0, mi.DimCols()) + 1, mi.DimRowsExtended() - 1);
-            case EDirection.Down:
-                return new PositionOnGrid(Random.Range(0, mi.DimCols()) + 1, 0);
-            case EDirection.Left:
-                return new PositionOnGrid(0, Random.Range(0, mi.DimRows()) + 1);
-            case EDirection.Right:
-                return new PositionOnGrid(mi.DimColsExtended() - 1, Random.Range(0, mi.DimRows()) + 1);
-        }
-
-        return new PositionOnGrid(0, 0);
-    }
-
-    // ----------------------------------------------------------------
     public void Generate(MapInfo mi, float offsetX, float offsetY)
     {
         OffsetX = offsetX;
