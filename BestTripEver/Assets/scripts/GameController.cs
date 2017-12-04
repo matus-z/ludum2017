@@ -9,6 +9,8 @@ public class GameController : MonoBehaviour
     public GameObject PuzzleGO;
     public GameObject PlayerGO;
 
+    public int MovesAvailable = 0;
+
     private Puzzle PuzzleController;
     private Player PlayerController;
 
@@ -18,8 +20,7 @@ public class GameController : MonoBehaviour
 
     private bool GameOver = true;
 
-    public Dictionary<ESin, int> SinsScore { get; private set; }
-    private int MovesAvailable = 0;
+    private Dictionary<ESin, int> SinsScore;
 
     private bool DoorOpened = false;
 
@@ -49,8 +50,6 @@ public class GameController : MonoBehaviour
         SinsScore = new Dictionary<ESin, int>();
 
         InitPuzzle(CurrentMapIndex);
-
-        MovesAvailable = 20;
     }
 
     // ----------------------------------------------------------------
@@ -212,11 +211,11 @@ public class GameController : MonoBehaviour
         SinsScore.Add(sin, 0);
     }
 
-    //// ----------------------------------------------------------------
-    //private bool IsSinUnlocked(ESin sin)
-    //{
-    //    return SinsScore.ContainsKey(sin);
-    //}
+    // ----------------------------------------------------------------
+    public bool IsSinUnlocked(ESin sin)
+    {
+        return SinsScore.ContainsKey(sin);
+    }
 
     //// ----------------------------------------------------------------
     //private void IncreaseSinsScore(ESin sin)

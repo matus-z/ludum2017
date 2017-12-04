@@ -14,7 +14,7 @@ public class TileController : MonoBehaviour
     {
         gc = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.5f, 0.5f);
-        if (sinIndex > 0 && gc.SinsScore.ContainsKey((ESin)sinIndex) == false)
+        if (sinIndex > 0 && gc.IsSinUnlocked((ESin)sinIndex) == false)
         {
             unlockingSin = true;
             GetComponent<SpriteRenderer>().color = new Color(1, 0, 0);
