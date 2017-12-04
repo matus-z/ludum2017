@@ -68,8 +68,6 @@ public class Player : MonoBehaviour
             if (fractionToGoal < 0.5f)
                 movementSpeedAct = (1.0f - 1.95f * c) * movementSpeedAct;
 
-            movementSpeedAct /= 10;
-
             rb.MovePosition(Vector2.MoveTowards(rb.position, Destination, movementSpeedAct * Time.fixedDeltaTime));
         }
         else

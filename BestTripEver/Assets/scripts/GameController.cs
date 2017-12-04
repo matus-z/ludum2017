@@ -24,6 +24,9 @@ public class GameController : MonoBehaviour
 
     private bool DoorOpened = false;
 
+    private int StartGameMoves = 0;
+    private int StartLevelMoves = 0;
+
     public delegate void del_onDoorOpened();
     public del_onDoorOpened Event_onDoorOpened;
 
@@ -49,17 +52,24 @@ public class GameController : MonoBehaviour
 
         SinsScore = new Dictionary<ESin, int>();
 
+        StartGameMoves = MovesAvailable;
+
         InitPuzzle(CurrentMapIndex);
     }
 
     // ----------------------------------------------------------------
     private void Update()
     {
+        if (KeyboardSolveRestart())
+            return;
+
         if (GameOver)
             return;
 
         if (PlayerController.Moving)
             return;
+
+        Debug.Log(MovesAvailable);
 
         MapInfo currentMap = Maps[CurrentMapIndex];
         if (currentMap.IsTileType(PlayerController.Pos, ETile.Out))
@@ -78,7 +88,7 @@ public class GameController : MonoBehaviour
 
         bool madeMove = newPos.X != PlayerController.Pos.X || newPos.Y != PlayerController.Pos.Y;
 
-        ESin ? newSin = currentMap.GetSin(newPos);
+        ESin? newSin = currentMap.GetSin(newPos);
 
         // If not moving to a board pos, move without penalization
         if (newSin.HasValue == false)
@@ -110,6 +120,30 @@ public class GameController : MonoBehaviour
         }
 
         //IncreaseSinsScore(newSin.Value);
+    }
+
+    // ----------------------------------------------------------------
+    private bool KeyboardSolveRestart()
+    {
+        bool isGameRestart = Input.GetKeyDown(KeyCode.P);
+        bool isLevelRestart = Input.GetKeyDown(KeyCode.L);
+
+        if (isGameRestart)
+        {
+            MovesAvailable = StartGameMoves;
+            InitPuzzle(0);
+            GameOver = false;
+            return true;
+        }
+        if (isLevelRestart)
+        {
+            MovesAvailable = StartLevelMoves;
+            InitPuzzle(CurrentMapIndex);
+            GameOver = false;
+            return true;
+        }
+
+        return false;
     }
 
     // ----------------------------------------------------------------
@@ -171,6 +205,8 @@ public class GameController : MonoBehaviour
         PuzzleController.ClearBoard();
         PuzzleController.Generate(currentMap, zeroX, zeroY);
         PlayerController.Init(playerPos);
+
+        StartLevelMoves = MovesAvailable;
     }
 
     // ----------------------------------------------------------------
