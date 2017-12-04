@@ -15,7 +15,7 @@ public class Puzzle : MonoBehaviour
     private float OffsetY = 0.0f;
 
     // TODO Matus : out with this
-    public float TileSize = 4.21f;
+    public float TileSize = 4.52f;
 
     // ----------------------------------------------------------------
     public void Generate(MapInfo mi, float offsetX, float offsetY)
