@@ -60,7 +60,26 @@ MonoBehaviour:
   - {fileID: 1575105842943310, guid: 437b2b14dd007dc4b9d6b6e9a007a4f8, type: 2}
   - {fileID: 1575105842943310, guid: e68ff45d421f6624c8d960e1d91b5357, type: 2}
   PowerupPrefabs:
+  - {fileID: 1041812939261976, guid: bea5371ebe2ca354f982f1b193e1bb1e, type: 2}
+  - {fileID: 1080103194608874, guid: 4e5b66ca0ec34f746bf99c43ba6a92c8, type: 2}
+  - {fileID: 1099349565431014, guid: 272cc3ba36dd55441966ae01acbdc151, type: 2}
+  - {fileID: 1125776057308976, guid: 44ec0194210416046a632bf7c439c1ba, type: 2}
+  - {fileID: 1855932663700966, guid: 67565373e35775b4f8c7e61d3f08c33a, type: 2}
+  - {fileID: 1780375349039728, guid: 0570f14492cbdd34b87310a2069d91b6, type: 2}
+  - {fileID: 1626531481446586, guid: d8b661bbf23f1654693d8751f09ab21d, type: 2}
+  - {fileID: 1016178526882452, guid: 95538b77006a03a429ce98853bdfe657, type: 2}
   - {fileID: 1140824031398774, guid: 4eb3817e1527e9e43ab935bf4a73ad35, type: 2}
+  - {fileID: 1356156858059752, guid: 500f07497b02f1e4d9054dbe6dc16e14, type: 2}
+  - {fileID: 1283462651284110, guid: 23ee11febbf75bb419e46ebf0ff5421d, type: 2}
+  - {fileID: 1014940785086636, guid: 52a6a722070ebcb4abd189c2fba0cc12, type: 2}
+  - {fileID: 1435057653579796, guid: 2fae575adc4354443a7632cc5941142e, type: 2}
+  - {fileID: 1769271521831480, guid: c323578b7c8497c4fa9f3c1e1512d951, type: 2}
+  - {fileID: 1898172066672596, guid: 4bdc06092738fc2409893e1e7a597108, type: 2}
+  - {fileID: 1160483453444560, guid: 579a83d336a4bf1428c100df819c9828, type: 2}
+  - {fileID: 1441761925203648, guid: eef95f02d4e5fe945ac95b0a1fe5cdb1, type: 2}
+  - {fileID: 1478993175300720, guid: 26aa891f1cd09804383950279f34dfa4, type: 2}
+  - {fileID: 1242369095752492, guid: dea2507bfb4e5ab4eb2e3be16919f46c, type: 2}
+  - {fileID: 1599325598969318, guid: 675a17a5172b3f74580c8f5c2f21826d, type: 2}
   WallPrefabs:
   - {fileID: 1018159139021358, guid: a49efa47e05c9f146ae957238eb16d18, type: 2}
   CornerPrefabs:
