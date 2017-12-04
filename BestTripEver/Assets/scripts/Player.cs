@@ -77,7 +77,7 @@ public class Player : MonoBehaviour
     }
 
     // ----------------------------------------------------------------
-    private void SetMoving(bool moving)
+    public void SetMoving(bool moving)
     {
         Moving = moving;
         SolveAnimations();

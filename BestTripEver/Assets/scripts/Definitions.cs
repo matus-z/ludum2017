@@ -1,6 +1,14 @@
 ﻿using System;
 
 // ----------------------------------------------------------------
+public enum EGameState
+{
+    GamePlay,
+    Message,
+    GameOver
+}
+
+// ----------------------------------------------------------------
 public enum EDirection
 {
     Up,
