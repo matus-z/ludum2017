@@ -2,12 +2,19 @@
 using System;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 // ----------------------------------------------------------------
 public class GameController : MonoBehaviour
 {
     public GameObject PuzzleGO;
     public GameObject PlayerGO;
+
+    public GameObject UITextAvailableMoves;
+
+    public GameObject UICanvasGameplay;
+    public GameObject UICanvasMessage;
+    public GameObject UICanvasGameover;
 
     public int MovesAvailable = 0;
 
@@ -18,7 +25,7 @@ public class GameController : MonoBehaviour
 
     private int CurrentMapIndex = 0;
 
-    private bool GameOver = true;
+    private EGameState GameState = EGameState.GamePlay;
 
     private Dictionary<ESin, int> SinsScore;
 
@@ -52,6 +59,7 @@ public class GameController : MonoBehaviour
 
         SinsScore = new Dictionary<ESin, int>();
 
+        SetAvailableMoves(MovesAvailable);
         StartGameMoves = MovesAvailable;
 
         InitPuzzle(CurrentMapIndex);
@@ -60,16 +68,20 @@ public class GameController : MonoBehaviour
     // ----------------------------------------------------------------
     private void Update()
     {
-        if (KeyboardSolveRestart())
+        if (KeyboardHandleGameState())
             return;
 
-        if (GameOver)
+        if (GameState != EGameState.GamePlay)
             return;
 
+        UpdateGamePlay();
+    }
+
+    // ----------------------------------------------------------------
+    private void UpdateGamePlay()
+    {
         if (PlayerController.Moving)
             return;
-
-        Debug.Log(MovesAvailable);
 
         MapInfo currentMap = Maps[CurrentMapIndex];
         if (currentMap.IsTileType(PlayerController.Pos, ETile.Out))
@@ -98,49 +110,46 @@ public class GameController : MonoBehaviour
             return;
         }
 
-        // If trying to move to a locked board pos, return
-        //if (IsSinUnlocked(newSin.Value) == false)
-        //    return;
-
         // Else move to an unlocked board pos and increase sin score
         PlayerController.Pos = newPos;
         PlayerController.MoveTo(destination);
 
         if (madeMove)
-        {
-            MovesAvailable -= 1;
-            //Debug.Log("MovesAvailable : " + MovesAvailable);
-        }
+            SetAvailableMoves(MovesAvailable - 1);
 
         if (MovesAvailable <= 0)
         {
-            // TODO Matus : Game Over screen
-            GameOver = true;
+            SetGameState(EGameState.GameOver);
             return;
         }
-
-        //IncreaseSinsScore(newSin.Value);
     }
 
     // ----------------------------------------------------------------
-    private bool KeyboardSolveRestart()
+    private bool KeyboardHandleGameState()
     {
         bool isGameRestart = Input.GetKeyDown(KeyCode.P);
         bool isLevelRestart = Input.GetKeyDown(KeyCode.L);
+        bool isContinue = Input.GetKeyDown(KeyCode.Space);
 
         if (isGameRestart)
         {
-            MovesAvailable = StartGameMoves;
+            SetAvailableMoves(StartGameMoves);
             InitPuzzle(0);
-            GameOver = false;
+            SetGameState(EGameState.GamePlay);
             return true;
         }
         if (isLevelRestart)
         {
-            MovesAvailable = StartLevelMoves;
+            Debug.Log(StartLevelMoves);
+
+            SetAvailableMoves(StartLevelMoves);
             InitPuzzle(CurrentMapIndex);
-            GameOver = false;
+            SetGameState(EGameState.GamePlay);
             return true;
+        }
+        if (isContinue && GameState == EGameState.Message)
+        {
+            SetGameState(EGameState.GamePlay);
         }
 
         return false;
@@ -171,22 +180,16 @@ public class GameController : MonoBehaviour
     }
 
     // ----------------------------------------------------------------
-    private bool Ok()
-    {
-        return PuzzleController != null && PlayerController != null && Maps != null && Maps.Count > 0;
-    }
-
-    // ----------------------------------------------------------------
     private void InitPuzzle(int mapIndex)
     {
         if (mapIndex < 0 || mapIndex >= Maps.Count)
         {
             Debug.Log("Game Over.");
-            GameOver = true;
+            SetGameState(EGameState.GameOver);
             return;
         }
 
-        GameOver = false;
+        SetGameState(EGameState.GamePlay);
 
         CurrentMapIndex = mapIndex;
         MapInfo currentMap = Maps[mapIndex];
@@ -207,23 +210,15 @@ public class GameController : MonoBehaviour
         PlayerController.Init(playerPos);
 
         StartLevelMoves = MovesAvailable;
+        Debug.Log("slm" + StartLevelMoves);
     }
 
     // ----------------------------------------------------------------
     public void PowerupPickedUp(int movesAdded)
     {
-        MovesAvailable += movesAdded;
-        if (Event_onDoorOpened != null)
-        {
-            Event_onDoorOpened();
-        }
-        DoorOpened = true;
-    }
+        SetGameState(EGameState.Message);
 
-    // ----------------------------------------------------------------
-    public void SinPickedUp(int sinIndex)
-    {
-        UnlockSin((ESin)sinIndex);
+        SetAvailableMoves(MovesAvailable + movesAdded);
         if (Event_onDoorOpened != null)
         {
             Event_onDoorOpened();
@@ -237,40 +232,24 @@ public class GameController : MonoBehaviour
         Gizmos.color = Color.yellow;
         Gizmos.DrawSphere(PlayerGO.transform.position, 0.3f);
     }
-
+    
     // ----------------------------------------------------------------
-    private void UnlockSin(ESin sin)
+    private void SetAvailableMoves(int avaliableMoves)
     {
-        if (SinsScore.ContainsKey(sin))
-            return;
-
-        SinsScore.Add(sin, 0);
+        MovesAvailable = avaliableMoves;
+        UITextAvailableMoves.GetComponent<Text>().text = "Available moves: " + avaliableMoves;
     }
 
     // ----------------------------------------------------------------
-    public bool IsSinUnlocked(ESin sin)
+    private void SetGameState(EGameState gameState)
     {
-        return SinsScore.ContainsKey(sin);
-    }
+        EGameState prevState = GameState;
+        GameState = gameState;
 
-    //// ----------------------------------------------------------------
-    //private void IncreaseSinsScore(ESin sin)
-    //{
-    //    UnlockSin(sin);
-    //    SinsScore[sin] += 1;
-    //    DebugLogScore();
-    //}
+        UICanvasGameplay.SetActive(GameState == EGameState.GamePlay);
+        UICanvasMessage.SetActive(GameState == EGameState.Message);
+        UICanvasGameover.SetActive(GameState == EGameState.GameOver);
 
-    // ----------------------------------------------------------------
-    private void DebugLogScore()
-    {
-        String str = "SinScore:";
-        foreach (var sin in SinsScore)
-            str += " " + sin.Key + " " + sin.Value;
-
-        int totalScore = SinsScore.Sum(x => x.Value);
-        str += " Total: " + totalScore;
-
-        Debug.Log(str);
+        PlayerController.SetMoving(GameState == EGameState.GamePlay);
     }
 }

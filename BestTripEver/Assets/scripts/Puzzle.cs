@@ -42,15 +42,23 @@ public class Puzzle : MonoBehaviour
                 if (prefabIndex == (int)ETile.In)
                     prefab = TileBeginPrefab;
 
-                if (prefabIndex == (int)ETile.Out) {
+                if (prefabIndex == (int)ETile.Out)
+                {
                     prefab = TileEndPrefab;
-                    if (row == dRE - 1) {
+                    if (row == dRE - 1)
+                    {
                         rotation = 0;
-                    } else if (col == 0) {
+                    }
+                    else if (col == 0)
+                    {
                         rotation = 90;
-                    } else if (row == 0) {
+                    }
+                    else if (row == 0)
+                    {
                         rotation = 180;
-                    } else if (col == dCE - 1) {
+                    }
+                    else if (col == dCE - 1)
+                    {
                         rotation = 270;
                     }
                 }
@@ -68,7 +76,8 @@ public class Puzzle : MonoBehaviour
             }
         }
 
-        foreach (var powerupPoint in mi.PowerupPoints) {
+        foreach (var powerupPoint in mi.PowerupPoints)
+        {
             tile = Instantiate(
                 PowerupPrefabs[powerupPoint.PowerupIndex],
                 new Vector3(OffsetX + powerupPoint.X * TileSize, OffsetY + powerupPoint.Y * TileSize, 0),
@@ -81,199 +90,200 @@ public class Puzzle : MonoBehaviour
         int wallPrefabIndex = Random.Range(0, WallPrefabs.Count);
         switch (mi.StartingPosition)
         {
-        case EDirection.Up:
-            tile = Instantiate(
-                CornerPrefabs[wallPrefabIndex],
-                new Vector3(OffsetX + (dCE - 1) * TileSize, OffsetY + dRE * TileSize, 0),
-                Quaternion.Euler(new Vector3(0, 0, 270)));
-            tile.transform.SetParent(transform);
-            tile = Instantiate(
-                CornerPrefabs[wallPrefabIndex],
-                new Vector3(OffsetX + (dCE - 1) * TileSize, OffsetY, 0),
-                Quaternion.Euler(new Vector3(0, 0, 180)));
-            tile.transform.SetParent(transform);
-            tile = Instantiate(
-                CornerPrefabs[wallPrefabIndex],
-                new Vector3(OffsetX, OffsetY, 0),
-                Quaternion.Euler(new Vector3(0, 0, 90)));
-            tile.transform.SetParent(transform);
-            tile = Instantiate(
-                CornerPrefabs[wallPrefabIndex],
-                new Vector3(OffsetX, OffsetY + dRE * TileSize, 0),
-                Quaternion.Euler(new Vector3(0, 0, 0)));
-            tile.transform.SetParent(transform);
+            case EDirection.Up:
+                tile = Instantiate(
+                    CornerPrefabs[wallPrefabIndex],
+                    new Vector3(OffsetX + (dCE - 1) * TileSize, OffsetY + dRE * TileSize, 0),
+                    Quaternion.Euler(new Vector3(0, 0, 270)));
+                tile.transform.SetParent(transform);
+                tile = Instantiate(
+                    CornerPrefabs[wallPrefabIndex],
+                    new Vector3(OffsetX + (dCE - 1) * TileSize, OffsetY, 0),
+                    Quaternion.Euler(new Vector3(0, 0, 180)));
+                tile.transform.SetParent(transform);
+                tile = Instantiate(
+                    CornerPrefabs[wallPrefabIndex],
+                    new Vector3(OffsetX, OffsetY, 0),
+                    Quaternion.Euler(new Vector3(0, 0, 90)));
+                tile.transform.SetParent(transform);
+                tile = Instantiate(
+                    CornerPrefabs[wallPrefabIndex],
+                    new Vector3(OffsetX, OffsetY + dRE * TileSize, 0),
+                    Quaternion.Euler(new Vector3(0, 0, 0)));
+                tile.transform.SetParent(transform);
 
-            for (int i = 1; i < dCE - 1; i++) {
+                for (int i = 1; i < dCE - 1; i++)
+                {
+                    tile = Instantiate(
+                        WallPrefabs[wallPrefabIndex],
+                        new Vector3(OffsetX + i * TileSize, OffsetY, 0),
+                        Quaternion.Euler(new Vector3(0, 0, 180)));
+                    tile.transform.SetParent(transform);
+                    tile = Instantiate(
+                        WallPrefabs[wallPrefabIndex],
+                        new Vector3(OffsetX + i * TileSize, OffsetY + dRE * TileSize, 0),
+                        Quaternion.identity);
+                    tile.transform.SetParent(transform);
+                }
+                for (int i = 0; i < dRE; i++)
+                {
+                    tile = Instantiate(
+                        WallPrefabs[wallPrefabIndex],
+                        new Vector3(OffsetX, OffsetY + i * TileSize, 0),
+                        Quaternion.Euler(new Vector3(0, 0, 90)));
+                    tile.transform.SetParent(transform);
+                    tile = Instantiate(
+                        WallPrefabs[wallPrefabIndex],
+                        new Vector3(OffsetX + (dCE - 1) * TileSize, OffsetY + i * TileSize, 0),
+                        Quaternion.Euler(new Vector3(0, 0, 270)));
+                    tile.transform.SetParent(transform);
+                }
+                break;
+            case EDirection.Down:
                 tile = Instantiate(
-                    WallPrefabs[wallPrefabIndex],
-                    new Vector3(OffsetX + i * TileSize, OffsetY, 0),
+                    CornerPrefabs[wallPrefabIndex],
+                    new Vector3(OffsetX + (dCE - 1) * TileSize, OffsetY + (dRE - 1) * TileSize, 0),
+                    Quaternion.Euler(new Vector3(0, 0, 270)));
+                tile.transform.SetParent(transform);
+                tile = Instantiate(
+                    CornerPrefabs[wallPrefabIndex],
+                    new Vector3(OffsetX + (dCE - 1) * TileSize, OffsetY - TileSize, 0),
                     Quaternion.Euler(new Vector3(0, 0, 180)));
                 tile.transform.SetParent(transform);
                 tile = Instantiate(
-                    WallPrefabs[wallPrefabIndex],
-                    new Vector3(OffsetX + i * TileSize, OffsetY + dRE * TileSize, 0),
-                    Quaternion.identity);
-                tile.transform.SetParent(transform);
-            }
-            for (int i = 0; i < dRE; i++)
-            {
-                tile = Instantiate(
-                    WallPrefabs[wallPrefabIndex],
-                    new Vector3(OffsetX, OffsetY + i * TileSize, 0),
+                    CornerPrefabs[wallPrefabIndex],
+                    new Vector3(OffsetX, OffsetY - TileSize, 0),
                     Quaternion.Euler(new Vector3(0, 0, 90)));
                 tile.transform.SetParent(transform);
                 tile = Instantiate(
-                    WallPrefabs[wallPrefabIndex],
-                    new Vector3(OffsetX + (dCE - 1) * TileSize, OffsetY + i * TileSize, 0),
-                    Quaternion.Euler(new Vector3(0, 0, 270)));
+                    CornerPrefabs[wallPrefabIndex],
+                    new Vector3(OffsetX, OffsetY + (dRE - 1) * TileSize, 0),
+                    Quaternion.Euler(new Vector3(0, 0, 0)));
                 tile.transform.SetParent(transform);
-            }
-            break;
-        case EDirection.Down:
-            tile = Instantiate(
-                CornerPrefabs[wallPrefabIndex],
-                new Vector3(OffsetX + (dCE - 1) * TileSize, OffsetY + (dRE - 1) * TileSize, 0),
-                Quaternion.Euler(new Vector3(0, 0, 270)));
-            tile.transform.SetParent(transform);
-            tile = Instantiate(
-                CornerPrefabs[wallPrefabIndex],
-                new Vector3(OffsetX + (dCE - 1) * TileSize, OffsetY - TileSize, 0),
-                Quaternion.Euler(new Vector3(0, 0, 180)));
-            tile.transform.SetParent(transform);
-            tile = Instantiate(
-                CornerPrefabs[wallPrefabIndex],
-                new Vector3(OffsetX, OffsetY - TileSize, 0),
-                Quaternion.Euler(new Vector3(0, 0, 90)));
-            tile.transform.SetParent(transform);
-            tile = Instantiate(
-                CornerPrefabs[wallPrefabIndex],
-                new Vector3(OffsetX, OffsetY + (dRE - 1) * TileSize, 0),
-                Quaternion.Euler(new Vector3(0, 0, 0)));
-            tile.transform.SetParent(transform);
 
-            for (int i = 1; i < dCE - 1; i++)
-            {
+                for (int i = 1; i < dCE - 1; i++)
+                {
+                    tile = Instantiate(
+                        WallPrefabs[wallPrefabIndex],
+                        new Vector3(OffsetX + i * TileSize, OffsetY - TileSize, 0),
+                        Quaternion.Euler(new Vector3(0, 0, 180)));
+                    tile.transform.SetParent(transform);
+                    tile = Instantiate(
+                        WallPrefabs[wallPrefabIndex],
+                        new Vector3(OffsetX + i * TileSize, OffsetY + (dRE - 1) * TileSize, 0),
+                        Quaternion.identity);
+                    tile.transform.SetParent(transform);
+                }
+                for (int i = 0; i < dRE - 1; i++)
+                {
+                    tile = Instantiate(
+                        WallPrefabs[wallPrefabIndex],
+                        new Vector3(OffsetX, OffsetY + i * TileSize, 0),
+                        Quaternion.Euler(new Vector3(0, 0, 90)));
+                    tile.transform.SetParent(transform);
+                    tile = Instantiate(
+                        WallPrefabs[wallPrefabIndex],
+                        new Vector3(OffsetX + (dCE - 1) * TileSize, OffsetY + i * TileSize, 0),
+                        Quaternion.Euler(new Vector3(0, 0, 270)));
+                    tile.transform.SetParent(transform);
+                }
+                break;
+            case EDirection.Left:
                 tile = Instantiate(
-                    WallPrefabs[wallPrefabIndex],
-                    new Vector3(OffsetX + i * TileSize, OffsetY - TileSize, 0),
+                    CornerPrefabs[wallPrefabIndex],
+                    new Vector3(OffsetX + (dCE - 1) * TileSize, OffsetY + (dRE - 1) * TileSize, 0),
+                    Quaternion.Euler(new Vector3(0, 0, 270)));
+                tile.transform.SetParent(transform);
+                tile = Instantiate(
+                    CornerPrefabs[wallPrefabIndex],
+                    new Vector3(OffsetX + (dCE - 1) * TileSize, OffsetY, 0),
                     Quaternion.Euler(new Vector3(0, 0, 180)));
                 tile.transform.SetParent(transform);
                 tile = Instantiate(
-                    WallPrefabs[wallPrefabIndex],
-                    new Vector3(OffsetX + i * TileSize, OffsetY + (dRE - 1) * TileSize, 0),
-                    Quaternion.identity);
-                tile.transform.SetParent(transform);
-            }
-            for (int i = 0; i < dRE - 1; i++)
-            {
-                tile = Instantiate(
-                    WallPrefabs[wallPrefabIndex],
-                    new Vector3(OffsetX, OffsetY + i * TileSize, 0),
+                    CornerPrefabs[wallPrefabIndex],
+                    new Vector3(OffsetX - TileSize, OffsetY, 0),
                     Quaternion.Euler(new Vector3(0, 0, 90)));
                 tile.transform.SetParent(transform);
                 tile = Instantiate(
-                    WallPrefabs[wallPrefabIndex],
-                    new Vector3(OffsetX + (dCE - 1) * TileSize, OffsetY + i * TileSize, 0),
+                    CornerPrefabs[wallPrefabIndex],
+                    new Vector3(OffsetX - TileSize, OffsetY + (dRE - 1) * TileSize, 0),
+                    Quaternion.Euler(new Vector3(0, 0, 0)));
+                tile.transform.SetParent(transform);
+                for (int i = 0; i < dCE - 1; i++)
+                {
+                    tile = Instantiate(
+                        WallPrefabs[wallPrefabIndex],
+                        new Vector3(OffsetX + i * TileSize, OffsetY, 0),
+                        Quaternion.Euler(new Vector3(0, 0, 180)));
+                    tile.transform.SetParent(transform);
+                    tile = Instantiate(
+                        WallPrefabs[wallPrefabIndex],
+                        new Vector3(OffsetX + i * TileSize, OffsetY + (dRE - 1) * TileSize, 0),
+                        Quaternion.identity);
+                    tile.transform.SetParent(transform);
+                }
+                for (int i = 1; i < dRE - 1; i++)
+                {
+                    tile = Instantiate(
+                        WallPrefabs[wallPrefabIndex],
+                        new Vector3(OffsetX - TileSize, OffsetY + i * TileSize, 0),
+                        Quaternion.Euler(new Vector3(0, 0, 90)));
+                    tile.transform.SetParent(transform);
+                    tile = Instantiate(
+                        WallPrefabs[wallPrefabIndex],
+                        new Vector3(OffsetX + (dCE - 1) * TileSize, OffsetY + i * TileSize, 0),
+                        Quaternion.Euler(new Vector3(0, 0, 270)));
+                    tile.transform.SetParent(transform);
+                }
+                break;
+            case EDirection.Right:
+                tile = Instantiate(
+                    CornerPrefabs[wallPrefabIndex],
+                    new Vector3(OffsetX + dCE * TileSize, OffsetY + (dRE - 1) * TileSize, 0),
                     Quaternion.Euler(new Vector3(0, 0, 270)));
                 tile.transform.SetParent(transform);
-            }
-            break;
-        case EDirection.Left:
-            tile = Instantiate(
-                CornerPrefabs[wallPrefabIndex],
-                new Vector3(OffsetX + (dCE - 1) * TileSize, OffsetY + (dRE - 1) * TileSize, 0),
-                Quaternion.Euler(new Vector3(0, 0, 270)));
-            tile.transform.SetParent(transform);
-            tile = Instantiate(
-                CornerPrefabs[wallPrefabIndex],
-                new Vector3(OffsetX + (dCE - 1) * TileSize, OffsetY, 0),
-                Quaternion.Euler(new Vector3(0, 0, 180)));
-            tile.transform.SetParent(transform);
-            tile = Instantiate(
-                CornerPrefabs[wallPrefabIndex],
-                new Vector3(OffsetX - TileSize, OffsetY, 0),
-                Quaternion.Euler(new Vector3(0, 0, 90)));
-            tile.transform.SetParent(transform);
-            tile = Instantiate(
-                CornerPrefabs[wallPrefabIndex],
-                new Vector3(OffsetX - TileSize, OffsetY + (dRE - 1) * TileSize, 0),
-                Quaternion.Euler(new Vector3(0, 0, 0)));
-            tile.transform.SetParent(transform);
-            for (int i = 0; i < dCE - 1; i++)
-            {
                 tile = Instantiate(
-                    WallPrefabs[wallPrefabIndex],
-                    new Vector3(OffsetX + i * TileSize, OffsetY, 0),
+                    CornerPrefabs[wallPrefabIndex],
+                    new Vector3(OffsetX + dCE * TileSize, OffsetY, 0),
                     Quaternion.Euler(new Vector3(0, 0, 180)));
                 tile.transform.SetParent(transform);
                 tile = Instantiate(
-                    WallPrefabs[wallPrefabIndex],
-                    new Vector3(OffsetX + i * TileSize, OffsetY + (dRE - 1) * TileSize, 0),
-                    Quaternion.identity);
-                tile.transform.SetParent(transform);
-            }
-            for (int i = 1; i < dRE - 1; i++)
-            {
-                tile = Instantiate(
-                    WallPrefabs[wallPrefabIndex],
-                    new Vector3(OffsetX - TileSize, OffsetY + i * TileSize, 0),
+                    CornerPrefabs[wallPrefabIndex],
+                    new Vector3(OffsetX, OffsetY, 0),
                     Quaternion.Euler(new Vector3(0, 0, 90)));
                 tile.transform.SetParent(transform);
                 tile = Instantiate(
-                    WallPrefabs[wallPrefabIndex],
-                    new Vector3(OffsetX + (dCE - 1) * TileSize, OffsetY + i * TileSize, 0),
-                    Quaternion.Euler(new Vector3(0, 0, 270)));
+                    CornerPrefabs[wallPrefabIndex],
+                    new Vector3(OffsetX, OffsetY + (dRE - 1) * TileSize, 0),
+                    Quaternion.Euler(new Vector3(0, 0, 0)));
                 tile.transform.SetParent(transform);
-            }
-            break;
-        case EDirection.Right:
-            tile = Instantiate(
-                CornerPrefabs[wallPrefabIndex],
-                new Vector3(OffsetX + dCE * TileSize, OffsetY + (dRE - 1) * TileSize, 0),
-                Quaternion.Euler(new Vector3(0, 0, 270)));
-            tile.transform.SetParent(transform);
-            tile = Instantiate(
-                CornerPrefabs[wallPrefabIndex],
-                new Vector3(OffsetX + dCE * TileSize, OffsetY, 0),
-                Quaternion.Euler(new Vector3(0, 0, 180)));
-            tile.transform.SetParent(transform);
-            tile = Instantiate(
-                CornerPrefabs[wallPrefabIndex],
-                new Vector3(OffsetX, OffsetY, 0),
-                Quaternion.Euler(new Vector3(0, 0, 90)));
-            tile.transform.SetParent(transform);
-            tile = Instantiate(
-                CornerPrefabs[wallPrefabIndex],
-                new Vector3(OffsetX, OffsetY + (dRE - 1) * TileSize, 0),
-                Quaternion.Euler(new Vector3(0, 0, 0)));
-            tile.transform.SetParent(transform);
-            for (int i = 0; i < dCE; i++)
-            {
-                tile = Instantiate(
-                    WallPrefabs[wallPrefabIndex],
-                    new Vector3(OffsetX + i * TileSize, OffsetY, 0),
-                    Quaternion.Euler(new Vector3(0, 0, 180)));
-                tile.transform.SetParent(transform);
-                tile = Instantiate(
-                    WallPrefabs[wallPrefabIndex],
-                    new Vector3(OffsetX + i * TileSize, OffsetY + (dRE - 1) * TileSize, 0),
-                    Quaternion.identity);
-                tile.transform.SetParent(transform);
-            }
-            for (int i = 1; i < dRE - 1; i++)
-            {
-                tile = Instantiate(
-                    WallPrefabs[wallPrefabIndex],
-                    new Vector3(OffsetX, OffsetY + i * TileSize, 0),
-                    Quaternion.Euler(new Vector3(0, 0, 90)));
-                tile.transform.SetParent(transform);
-                tile = Instantiate(
-                    WallPrefabs[wallPrefabIndex],
-                    new Vector3(OffsetX + dCE * TileSize, OffsetY + i * TileSize, 0),
-                    Quaternion.Euler(new Vector3(0, 0, 270)));
-                tile.transform.SetParent(transform);
-            }
-            break;
+                for (int i = 0; i < dCE; i++)
+                {
+                    tile = Instantiate(
+                        WallPrefabs[wallPrefabIndex],
+                        new Vector3(OffsetX + i * TileSize, OffsetY, 0),
+                        Quaternion.Euler(new Vector3(0, 0, 180)));
+                    tile.transform.SetParent(transform);
+                    tile = Instantiate(
+                        WallPrefabs[wallPrefabIndex],
+                        new Vector3(OffsetX + i * TileSize, OffsetY + (dRE - 1) * TileSize, 0),
+                        Quaternion.identity);
+                    tile.transform.SetParent(transform);
+                }
+                for (int i = 1; i < dRE - 1; i++)
+                {
+                    tile = Instantiate(
+                        WallPrefabs[wallPrefabIndex],
+                        new Vector3(OffsetX, OffsetY + i * TileSize, 0),
+                        Quaternion.Euler(new Vector3(0, 0, 90)));
+                    tile.transform.SetParent(transform);
+                    tile = Instantiate(
+                        WallPrefabs[wallPrefabIndex],
+                        new Vector3(OffsetX + dCE * TileSize, OffsetY + i * TileSize, 0),
+                        Quaternion.Euler(new Vector3(0, 0, 270)));
+                    tile.transform.SetParent(transform);
+                }
+                break;
         }
     }
 
