@@ -60,7 +60,7 @@ public class MapInfoLoader
                             tmp.Add(int.Parse(x));
                         }
                     }
-                    puzzleMap.Add(tmp);
+                    puzzleMap.Insert(0, tmp);
                     break;
                 default:
                     if (line.Trim().Length > 0)
