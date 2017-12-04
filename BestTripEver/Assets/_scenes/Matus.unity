@@ -283,7 +283,7 @@ MonoBehaviour:
   UICanvasMessage: {fileID: 1122181411}
   UICanvasGameover: {fileID: 1605260228}
   MovesAvailable: 20
-  CurrentMapIndex: 0
+  CurrentMapIndex: 18
 --- !u!4 &612666405
 Transform:
   m_ObjectHideFlags: 0
@@ -346,62 +346,62 @@ Prefab:
     - target: {fileID: 224280465501021390, guid: 7c251a466fb570a46afda3ff75cb028f,
         type: 2}
       propertyPath: m_LocalPosition.x
-      value: 250.5
+      value: 307.5
       objectReference: {fileID: 0}
     - target: {fileID: 224280465501021390, guid: 7c251a466fb570a46afda3ff75cb028f,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: 141
+      value: 173
       objectReference: {fileID: 0}
     - target: {fileID: 224960150734070566, guid: 7c251a466fb570a46afda3ff75cb028f,
         type: 2}
       propertyPath: m_LocalPosition.x
-      value: 250.5
+      value: 307.5
       objectReference: {fileID: 0}
     - target: {fileID: 224960150734070566, guid: 7c251a466fb570a46afda3ff75cb028f,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: 141
+      value: 173
       objectReference: {fileID: 0}
     - target: {fileID: 224165245842168422, guid: 7c251a466fb570a46afda3ff75cb028f,
         type: 2}
       propertyPath: m_LocalPosition.x
-      value: 240.5
+      value: 297.5
       objectReference: {fileID: 0}
     - target: {fileID: 224165245842168422, guid: 7c251a466fb570a46afda3ff75cb028f,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: 71
+      value: 103
       objectReference: {fileID: 0}
     - target: {fileID: 224261261982658980, guid: 7c251a466fb570a46afda3ff75cb028f,
         type: 2}
       propertyPath: m_LocalPosition.x
-      value: 240.5
+      value: 297.5
       objectReference: {fileID: 0}
     - target: {fileID: 224261261982658980, guid: 7c251a466fb570a46afda3ff75cb028f,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: 101
+      value: 133
       objectReference: {fileID: 0}
     - target: {fileID: 224037631971140172, guid: 7c251a466fb570a46afda3ff75cb028f,
         type: 2}
       propertyPath: m_LocalPosition.x
-      value: 250.5
+      value: 307.5
       objectReference: {fileID: 0}
     - target: {fileID: 224037631971140172, guid: 7c251a466fb570a46afda3ff75cb028f,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: 141
+      value: 173
       objectReference: {fileID: 0}
     - target: {fileID: 224645417266858060, guid: 7c251a466fb570a46afda3ff75cb028f,
         type: 2}
       propertyPath: m_LocalPosition.x
-      value: 240.5
+      value: 297.5
       objectReference: {fileID: 0}
     - target: {fileID: 224645417266858060, guid: 7c251a466fb570a46afda3ff75cb028f,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: 131
+      value: 163
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7c251a466fb570a46afda3ff75cb028f, type: 2}

@@ -5,7 +5,8 @@ public enum EGameState
 {
     GamePlay,
     Message,
-    GameOver
+    GameOver,
+    GameWin
 }
 
 // ----------------------------------------------------------------

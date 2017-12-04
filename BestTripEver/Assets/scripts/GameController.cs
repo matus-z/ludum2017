@@ -230,6 +230,12 @@ public class GameController : MonoBehaviour
         DoorOpened = true;
 
         UITextMessage.GetComponent<Text>().text = Msgs.GetMessage(powerupIndex + 1);
+
+        if (CurrentMapIndex >= Maps.Count - 1)
+        {
+            Debug.Log("win");
+            SetGameState(EGameState.GameWin);
+        }
     }
 
     // ----------------------------------------------------------------
@@ -253,8 +259,8 @@ public class GameController : MonoBehaviour
         GameState = gameState;
 
         UICanvasGameplay.SetActive(GameState == EGameState.GamePlay);
-        UICanvasMessage.SetActive(GameState == EGameState.Message);
         UICanvasGameover.SetActive(GameState == EGameState.GameOver);
+        UICanvasMessage.SetActive(GameState == EGameState.Message || GameState == EGameState.GameWin);
 
         PlayerController.SetMoving(GameState == EGameState.GamePlay);
     }
