@@ -95,7 +95,7 @@ public class MapInfo
 
         // Add tiles for out directions
         foreach (EndingPoint ep in EndingPoints)
-            res[ep.Pos.X][ep.Pos.Y] = (int)ETile.Out;
+            res[ep.Pos.Y][ep.Pos.X] = (int)ETile.Out;
 
         return res;
     }

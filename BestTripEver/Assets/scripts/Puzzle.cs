@@ -5,12 +5,13 @@ using UnityEngine;
 public class Puzzle : MonoBehaviour
 {
     public List<GameObject> TilePrefabs;
+    public List<GameObject> PowerupPrefabs;
     public GameObject TileBeginPrefab;
     public GameObject TileEndPrefab;
 
     private float OffsetX = 0.0f;
     private float OffsetY = 0.0f;
-    
+
     // TODO Matus : out with this
     public float TileSize = 4.21f;
 
@@ -65,9 +66,19 @@ public class Puzzle : MonoBehaviour
                     prefab,
                     new Vector3(OffsetX + col * TileSize, OffsetY + row * TileSize, 0),
                     Quaternion.identity);
-
+                if (prefabIndex >= 0 && prefabIndex < TilePrefabs.Count)
+                    tile.GetComponent<TileController>().sinIndex = prefabIndex;
                 tile.transform.SetParent(transform);
             }
+        }
+
+        foreach (var powerupPoint in mi.PowerupPoints) {
+            GameObject tile = Instantiate(
+                PowerupPrefabs[powerupPoint.PowerupIndex],
+                new Vector3(OffsetX + powerupPoint.X * TileSize, OffsetY + powerupPoint.Y * TileSize, 0),
+                Quaternion.identity);
+            tile.GetComponent<PowerupController>().powerupIndex = powerupPoint.PowerupIndex;
+            tile.transform.SetParent(transform);
         }
     }
 
@@ -85,7 +96,7 @@ public class Puzzle : MonoBehaviour
     }
 
     // ----------------------------------------------------------------
-    public Vector2 GetDestination(MapInfo mi, ref PositionOnGrid playerPos, EDirection d)
+    public Vector2 GetDestination(MapInfo mi, ref PositionOnGrid playerPos, EDirection d, bool doorOpened)
     {
         int x = playerPos.X;
         int y = playerPos.Y;
@@ -105,10 +116,19 @@ public class Puzzle : MonoBehaviour
         if (mi.IsTileType(playerPos, ETile.In) == false && mi.IsTileType(nextPos, ETile.In))
             return GetDestinationFromTile(playerPos);
 
-        // If in or out, move just one tile
-        if (mi.IsTileType(nextPos, ETile.In) || mi.IsTileType(nextPos, ETile.Out))
+        // If in, move just one tile
+        if (mi.IsTileType(nextPos, ETile.In))
         {
             playerPos = nextPos;
+            return GetDestinationFromTile(playerPos);
+        }
+
+        // If out, move only if door opened
+        if (mi.IsTileType(nextPos, ETile.Out))
+        {
+            if (doorOpened) {
+                playerPos = nextPos;
+            }
             return GetDestinationFromTile(playerPos);
         }
 

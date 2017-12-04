@@ -35,6 +35,10 @@ public class Player : MonoBehaviour
 
         Moving = false;
 
+        if (Score == null) {
+            Score = new Dictionary<ESin, int>();
+        }
+
         foreach (ESin sin in unlockedSins)
         {
             if (Score.ContainsKey(sin))

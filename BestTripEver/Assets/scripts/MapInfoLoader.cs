@@ -47,7 +47,7 @@ public class MapInfoLoader
                     break;
                 case 'p':
                     values = line.Split(new char[] { ' ' });
-                    powerupPoints.Add(new PowerupPoint(int.Parse(values[1]), int.Parse(values[2])));
+                    powerupPoints.Add(new PowerupPoint(int.Parse(values[1]), int.Parse(values[2]), int.Parse(values[3])));
                     break;
                 case '[':
                     values = line.Split(new char[] { '[', ']', ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
