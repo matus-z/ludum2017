@@ -88,4 +88,4 @@ MonoBehaviour:
     type: 2}
   TileEndPrefab: {fileID: 1543839584411530, guid: bfe79029f8f909142b7c38fba794562d,
     type: 2}
-  TileSize: 4.21
+  TileSize: 4.52

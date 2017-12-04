@@ -15,7 +15,7 @@ public class Puzzle : MonoBehaviour
     private float OffsetY = 0.0f;
 
     // TODO Matus : out with this
-    public float TileSize = 4.21f;
+    public float TileSize = 4.52f;
 
     // ----------------------------------------------------------------
     public void Generate(MapInfo mi, float offsetX, float offsetY)
@@ -83,7 +83,6 @@ public class Puzzle : MonoBehaviour
                 new Vector3(OffsetX + powerupPoint.X * TileSize, OffsetY + powerupPoint.Y * TileSize, 0),
                 Quaternion.identity);
 
-            tile.GetComponent<PowerupController>().powerupIndex = powerupPoint.PowerupIndex;
             tile.transform.SetParent(transform);
         }
 

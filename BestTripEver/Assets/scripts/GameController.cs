@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 // ----------------------------------------------------------------
 public class GameController : MonoBehaviour
@@ -11,6 +12,7 @@ public class GameController : MonoBehaviour
     public GameObject PlayerGO;
 
     public GameObject UITextAvailableMoves;
+    public GameObject UITextMessage;
 
     public GameObject UICanvasGameplay;
     public GameObject UICanvasMessage;
@@ -36,6 +38,8 @@ public class GameController : MonoBehaviour
 
     public delegate void del_onDoorOpened();
     public del_onDoorOpened Event_onDoorOpened;
+
+    private Messages Msgs;
 
     // ----------------------------------------------------------------
     private void Start()
@@ -63,6 +67,8 @@ public class GameController : MonoBehaviour
         StartGameMoves = MovesAvailable;
 
         InitPuzzle(CurrentMapIndex);
+
+        Msgs = new Messages();
     }
 
     // ----------------------------------------------------------------
@@ -82,6 +88,12 @@ public class GameController : MonoBehaviour
     {
         if (PlayerController.Moving)
             return;
+
+        if (MovesAvailable <= 0 && PlayerController.Moving == false)
+        {
+            SetGameState(EGameState.GameOver);
+            return;
+        }
 
         MapInfo currentMap = Maps[CurrentMapIndex];
         if (currentMap.IsTileType(PlayerController.Pos, ETile.Out))
@@ -116,12 +128,6 @@ public class GameController : MonoBehaviour
 
         if (madeMove)
             SetAvailableMoves(MovesAvailable - 1);
-
-        if (MovesAvailable <= 0)
-        {
-            SetGameState(EGameState.GameOver);
-            return;
-        }
     }
 
     // ----------------------------------------------------------------
@@ -133,15 +139,15 @@ public class GameController : MonoBehaviour
 
         if (isGameRestart)
         {
-            SetAvailableMoves(StartGameMoves);
-            InitPuzzle(0);
-            SetGameState(EGameState.GamePlay);
-            return true;
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
+
+            //SetAvailableMoves(StartGameMoves);
+            //InitPuzzle(0);
+            //SetGameState(EGameState.GamePlay);
+            //return true;
         }
         if (isLevelRestart)
         {
-            Debug.Log(StartLevelMoves);
-
             SetAvailableMoves(StartLevelMoves);
             InitPuzzle(CurrentMapIndex);
             SetGameState(EGameState.GamePlay);
@@ -184,7 +190,6 @@ public class GameController : MonoBehaviour
     {
         if (mapIndex < 0 || mapIndex >= Maps.Count)
         {
-            Debug.Log("Game Over.");
             SetGameState(EGameState.GameOver);
             return;
         }
@@ -210,11 +215,10 @@ public class GameController : MonoBehaviour
         PlayerController.Init(playerPos);
 
         StartLevelMoves = MovesAvailable;
-        Debug.Log("slm" + StartLevelMoves);
     }
 
     // ----------------------------------------------------------------
-    public void PowerupPickedUp(int movesAdded)
+    public void PowerupPickedUp(int powerupIndex, int movesAdded)
     {
         SetGameState(EGameState.Message);
 
@@ -224,6 +228,8 @@ public class GameController : MonoBehaviour
             Event_onDoorOpened();
         }
         DoorOpened = true;
+
+        UITextMessage.GetComponent<Text>().text = Msgs.GetMessage(powerupIndex + 1);
     }
 
     // ----------------------------------------------------------------
