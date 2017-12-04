@@ -140,8 +140,6 @@ public class GameController : MonoBehaviour
         }
         if (isLevelRestart)
         {
-            Debug.Log(StartLevelMoves);
-
             SetAvailableMoves(StartLevelMoves);
             InitPuzzle(CurrentMapIndex);
             SetGameState(EGameState.GamePlay);
@@ -184,7 +182,6 @@ public class GameController : MonoBehaviour
     {
         if (mapIndex < 0 || mapIndex >= Maps.Count)
         {
-            Debug.Log("Game Over.");
             SetGameState(EGameState.GameOver);
             return;
         }
@@ -210,7 +207,6 @@ public class GameController : MonoBehaviour
         PlayerController.Init(playerPos);
 
         StartLevelMoves = MovesAvailable;
-        Debug.Log("slm" + StartLevelMoves);
     }
 
     // ----------------------------------------------------------------
