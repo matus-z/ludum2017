@@ -109,7 +109,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   powerupIndex: 16
-  MovesAdded: 7
+  MovesAdded: 14
 --- !u!212 &212474836414121432
 SpriteRenderer:
   m_ObjectHideFlags: 1

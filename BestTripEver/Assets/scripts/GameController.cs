@@ -232,7 +232,7 @@ public class GameController : MonoBehaviour
         Gizmos.color = Color.yellow;
         Gizmos.DrawSphere(PlayerGO.transform.position, 0.3f);
     }
-    
+
     // ----------------------------------------------------------------
     private void SetAvailableMoves(int avaliableMoves)
     {

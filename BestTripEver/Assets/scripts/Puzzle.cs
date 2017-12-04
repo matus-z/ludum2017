@@ -125,7 +125,7 @@ public class Puzzle : MonoBehaviour
                         Quaternion.identity);
                     tile.transform.SetParent(transform);
                 }
-                for (int i = 0; i < dRE; i++)
+                for (int i = 1; i < dRE; i++)
                 {
                     tile = Instantiate(
                         WallPrefabs[wallPrefabIndex],
@@ -257,7 +257,7 @@ public class Puzzle : MonoBehaviour
                     new Vector3(OffsetX, OffsetY + (dRE - 1) * TileSize, 0),
                     Quaternion.Euler(new Vector3(0, 0, 0)));
                 tile.transform.SetParent(transform);
-                for (int i = 0; i < dCE; i++)
+                for (int i = 1; i < dCE; i++)
                 {
                     tile = Instantiate(
                         WallPrefabs[wallPrefabIndex],
