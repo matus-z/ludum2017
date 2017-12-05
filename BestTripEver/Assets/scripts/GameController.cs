@@ -13,10 +13,16 @@ public class GameController : MonoBehaviour
 
     public GameObject UITextAvailableMoves;
     public GameObject UITextMessage;
+    public Image UIImage;
+
+    public List<Sprite> UIImages;
 
     public GameObject UICanvasGameplay;
     public GameObject UICanvasMessage;
     public GameObject UICanvasGameover;
+    public GameObject UIPlayAgain;
+
+    public AudioSource Music;
 
     public int MovesAvailable = 0;
 
@@ -72,6 +78,7 @@ public class GameController : MonoBehaviour
 
         // Init message screen
         UITextMessage.GetComponent<Text>().text = Msgs.GetMessage(0);
+        UIImage.sprite = UIImages[0];
         SetGameState(EGameState.Message);
     }
 
@@ -139,7 +146,24 @@ public class GameController : MonoBehaviour
     {
         bool isGameRestart = Input.GetKeyDown(KeyCode.P);
         bool isLevelRestart = Input.GetKeyDown(KeyCode.L);
+        bool isMuteMusic = Input.GetKeyDown(KeyCode.M);
+        bool isVolumeUp = Input.GetKeyDown(KeyCode.Comma);
+        bool isVolumeDown = Input.GetKeyDown(KeyCode.Period);
         bool isContinue = Input.GetKeyDown(KeyCode.Space);
+
+        if (isMuteMusic) {
+            Music.mute = !Music.mute;
+        }
+
+        if (isVolumeUp)
+        {
+            Music.volume = Music.volume + 0.1f;
+        }
+
+        if (isVolumeDown)
+        {
+            Music.volume = Music.volume - 0.1f;
+        }
 
         if (isGameRestart)
         {
@@ -234,6 +258,7 @@ public class GameController : MonoBehaviour
         DoorOpened = true;
 
         UITextMessage.GetComponent<Text>().text = Msgs.GetMessage(powerupIndex + 1);
+        UIImage.sprite = UIImages[powerupIndex + 1];
 
         if (CurrentMapIndex >= Maps.Count - 1)
         {
@@ -265,6 +290,7 @@ public class GameController : MonoBehaviour
         UICanvasGameplay.SetActive(GameState == EGameState.GamePlay);
         UICanvasGameover.SetActive(GameState == EGameState.GameOver);
         UICanvasMessage.SetActive(GameState == EGameState.Message || GameState == EGameState.GameWin);
+        UIPlayAgain.SetActive(GameState == EGameState.GameWin);
 
         PlayerController.SetMoving(GameState == EGameState.GamePlay);
     }

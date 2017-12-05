@@ -20,7 +20,7 @@ public class TileController : MonoBehaviour
     {
         if (other.tag == "Player" && !touched)
         {
-            GetComponent<SpriteRenderer>().color = new Color(1, 1, 1);
+            GetComponent<SpriteRenderer>().color = new Color(0.9f, 0.9f, 0.9f);
             touched = true;
         }
     }
