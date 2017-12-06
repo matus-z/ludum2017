@@ -35,8 +35,6 @@ public class GameController : MonoBehaviour
 
     private EGameState GameState = EGameState.Message;
 
-    private Dictionary<ESin, int> SinsScore;
-
     private bool DoorOpened = false;
 
     private int StartGameMoves = 0;
@@ -66,8 +64,6 @@ public class GameController : MonoBehaviour
         Maps = mapsLoader.LoadFromFile();
         if (Maps.Count <= 0)
             return;
-
-        SinsScore = new Dictionary<ESin, int>();
 
         SetAvailableMoves(MovesAvailable);
         StartGameMoves = MovesAvailable;
@@ -227,7 +223,7 @@ public class GameController : MonoBehaviour
         CurrentMapIndex = mapIndex;
         MapInfo currentMap = Maps[mapIndex];
 
-        currentMap.DebugLog();
+        //currentMap.DebugLog();
 
         PositionOnGrid playerPos = currentMap.PlayerStartingPosRand();
 
@@ -284,7 +280,6 @@ public class GameController : MonoBehaviour
     // ----------------------------------------------------------------
     private void SetGameState(EGameState gameState)
     {
-        EGameState prevState = GameState;
         GameState = gameState;
 
         UICanvasGameplay.SetActive(GameState == EGameState.GamePlay);

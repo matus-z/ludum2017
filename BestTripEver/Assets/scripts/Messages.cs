@@ -38,8 +38,6 @@ public class Messages
 
     public String GetMessage(int index)
     {
-        Debug.Log(Msgs);
-
         if (index < 0 || index >= Msgs.Count)
             return "";
 

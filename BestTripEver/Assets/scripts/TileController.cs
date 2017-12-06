@@ -8,11 +8,8 @@ public class TileController : MonoBehaviour
     public bool unlockingSin = false;
     public int sinIndex = 0;
 
-    private GameController gc;
-
     void Start()
     {
-        gc = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.5f, 0.5f);
     }
 
